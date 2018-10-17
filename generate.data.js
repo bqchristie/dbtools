@@ -12,7 +12,13 @@ let faker = require('faker');
 
 //Create People
 
-_.times(10000, function(data){
-    let person = new Person({name: faker.name.firstName()});
+_.times(10000, function (data) {
+    let person = new Person({
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        username: faker.internet.email()
+    });
+
+    console.log(person);
     person.save();
 })
