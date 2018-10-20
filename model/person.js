@@ -4,7 +4,12 @@ module.exports = class Person extends DAO {
 
     static meta() {
         return {
-            table: "person"
+            table: "person",
+            columns: [
+                {name:'firstName'},
+                {name:'lastName'},
+                {phone:'lastName'}
+            ]
         }
     }
 

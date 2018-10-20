@@ -69,14 +69,17 @@ class _dao {
      *
      */
     static createTable() {
-        let ddl = `drop table if exists ${this.meta().table}; 
-        create table if not exists ${this.meta().table}
-        (
-	        id int auto_increment primary key,
-	        name varchar(100) null,
-	        skqzziks varchar(100) null
-        );`;
+        let ddl =
+            `drop table if exists ${this.meta().table};
+            create table if not exists ${this.meta().table}(${getColumnDDLDefinintions()});`;
         this.execute(ddl);
+    }
+
+    getColumnDDLDefinintions() {
+        let defs = `id int auto_increment primary key,
+	        name varchar(100) null,
+	        skqzziks varchar(100) null`;
+        return defs;
     }
 
     getInsertStatement() {
@@ -93,7 +96,6 @@ class _dao {
 
     getColumns() {
         return _.keys(this);
-
     }
 
     getValues() {
