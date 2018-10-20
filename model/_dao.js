@@ -1,4 +1,5 @@
 let _ = require('lodash');
+let db = require('../util/dbutil');
 
 class _dao {
 
@@ -26,8 +27,10 @@ class _dao {
     validate() {
     }
 
-    execute(statement) {
+    static execute(statement) {
         console.log(statement);
+        db.execute(statement)
+
     }
 
     static findById(id) {
@@ -36,13 +39,18 @@ class _dao {
     }
 
     static createTable() {
-        console.log(`create table ${this.constructor.meta().table}`);
+        let ddl = `create table ${this.meta().table}
+        (
+	        id int auto_increment primary key,
+	        name varchar(100) null
+        );`;
+        this.execute(ddl);
     }
 
     getCreateStatement(obj) {
         let ddl = 'CREATE TABLE IF NOT EXISTS ' + obj.meta.tablename;
         let foreignKeys = []
-        if(obj.meta.references){
+        if (obj.meta.references) {
             foreignKeys.push(reference.meta.tablename)
         }
         return ddl;

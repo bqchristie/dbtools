@@ -1,3 +1,13 @@
+const mysql = require('mysql2');
+
+// create the connection to database
+const connection = mysql.createConnection({
+    host: '127.0.0.1',
+    user: 'root',
+    password: 'password',
+    database: 'test'
+});
+
 class DBUtil {
 
     static generateTables(objs) {
@@ -5,7 +15,14 @@ class DBUtil {
     }
 
     static execute(statement) {
-        console.log(statement);
+        connection.query(
+            statement,
+            function(err, results, fields) {
+                console.log(err);
+                console.log(results); // results contains rows returned by server
+                console.log(fields); // fields contains extra meta data about results, if available
+            }
+        );
     }
 
 }

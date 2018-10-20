@@ -16,6 +16,22 @@ ddl.push(`CREATE TABLE test8
     column_2 INT(11)`
 );
 
+create table test.test
+(
+    id int auto_increment,
+    column_2 int null,
+    constraint test_id_uindex
+unique (id)
+)
+;
+
+alter table test.test
+add constraint `PRIMARY`
+primary key (id)
+;
+
+
+
 //ddl.push(`CREATE UNIQUE INDEX test_id_uindex8 ON test8 (id);`)
 
 ddl.forEach(function (stmnt) {

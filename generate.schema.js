@@ -7,7 +7,5 @@ let Right = require('./model/right');
 
 
 DBUtil.generateTables([
-    Person,
-    Role,
-    Right
+    Person
 ]);

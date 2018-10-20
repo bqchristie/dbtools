@@ -4,7 +4,7 @@ module.exports = class Person extends DAO {
 
     static meta() {
         return {
-            table: "Person"
+            table: "person"
         }
     }
 
