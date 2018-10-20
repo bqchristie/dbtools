@@ -1,9 +1,11 @@
 var DAO = require('./_dao');
 
-module.exports = class Right extends DAO {
+module.exports = class Permission extends DAO {
     static meta() {
         return {
-            table: "Right"
+            columns: [
+                {name:'name'}
+            ]
         }
     }
 

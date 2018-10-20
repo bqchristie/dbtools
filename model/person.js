@@ -4,17 +4,16 @@ module.exports = class Person extends DAO {
 
     static meta() {
         return {
-            table: "person",
             columns: [
                 {name:'firstName'},
                 {name:'lastName'},
-                {phone:'lastName'}
+                {name:'phone'}
             ]
         }
     }
 
     static build(data) {
-        return new Model(data);
+        return new Person(data);
     }
 
     constructor(obj) {

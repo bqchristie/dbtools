@@ -4,8 +4,13 @@ module.exports = class Role extends DAO {
 
     static meta() {
         return {
-            table: "Role"
+            columns: [
+                {name:'name'}
+            ]
         }
+    }
+    static build(data) {
+        return new Role(data);
     }
 
     constructor(obj) {

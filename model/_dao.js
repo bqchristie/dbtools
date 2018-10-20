@@ -30,7 +30,9 @@ class _dao {
      *
      */
     insert() {
-        this.execute(this.getInsertStatement())
+        var statement = this.getInsertStatement();
+        console.log(statement);
+        this.constructor.execute(statement)
     }
 
     /**
@@ -70,23 +72,30 @@ class _dao {
      */
     static createTable() {
         let ddl =
-            `drop table if exists ${this.meta().table};
-            create table if not exists ${this.meta().table}(${getColumnDDLDefinintions()});`;
+            `drop table if exists ${this.name.toLowerCase()};
+            create table if not exists ${this.name.toLowerCase()}(${this.getColumnDefinintions()});`;
+
+        console.log(ddl);
         this.execute(ddl);
     }
 
-    getColumnDDLDefinintions() {
-        let defs = `id int auto_increment primary key,
-	        name varchar(100) null,
-	        skqzziks varchar(100) null`;
-        return defs;
+    static getColumnDefinintions() {
+
+        let defs = _.reduce(this.meta().columns,(acc, column)=>{
+            if(column) {
+                acc.push(column.name + ' varchar(100) null')
+            }
+            return acc;
+        },['id int auto_increment primary key']);
+
+        return defs.join(',');
     }
 
     getInsertStatement() {
         var columns = this.getColumns().join(",");
         var values = this.getValues(this);
 
-        var insert = `INSERT INTO TABLE ${this.getTableName()}(${columns}) values(${values}) `;
+        var insert = `INSERT INTO ${this.getTableName()}(${columns}) values(${values}) `;
         return insert;
     }
 
