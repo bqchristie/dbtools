@@ -3,57 +3,80 @@ let db = require('../util/dbutil');
 
 class _dao {
 
+    /**
+     *
+     * @param json
+     */
     constructor(json) {
         Object.assign(this, json);
     }
 
+    /**
+     *
+     */
     save() {
         this.id ? this.update() : this.insert();
     }
 
+    /**
+     *
+     */
     update() {
         var statement = `update ${this.constructor.meta().table} values ${this.name}`;
         this.execute(statement)
     }
 
+    /**
+     *
+     */
     insert() {
         this.execute(this.getInsertStatement())
     }
 
+    /**
+     *
+     */
     delete() {
         console.log('');
     }
 
+    /**
+     *
+     */
     validate() {
     }
 
+    /**
+     *
+     * @param statement
+     */
     static execute(statement) {
-        console.log(statement);
         db.execute(statement)
 
     }
 
+    /**
+     *
+     * @param id
+     * @returns {*}
+     */
     static findById(id) {
         console.log(`select * from ${this.constructor.meta().table} where id = ${id}`);
         return this.build({name: "Alice"});
     }
 
+    /**
+     *
+     */
     static createTable() {
-        let ddl = `create table ${this.meta().table}
+        let ddl = `drop table if exists ${this.meta().table}; 
+        create table if not exists ${this.meta().table}
         (
 	        id int auto_increment primary key,
-	        name varchar(100) null
+	        name varchar(100) null,
+	        skqzziks varchar(100) null
         );`;
         this.execute(ddl);
-    }
-
-    getCreateStatement(obj) {
-        let ddl = 'CREATE TABLE IF NOT EXISTS ' + obj.meta.tablename;
-        let foreignKeys = []
-        if (obj.meta.references) {
-            foreignKeys.push(reference.meta.tablename)
-        }
-        return ddl;
     }
 
     getInsertStatement() {

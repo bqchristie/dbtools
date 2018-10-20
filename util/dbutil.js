@@ -14,15 +14,20 @@ class DBUtil {
         objs.forEach(obj => obj.createTable())
     }
 
-    static execute(statement) {
-        connection.query(
-            statement,
-            function(err, results, fields) {
-                console.log(err);
-                console.log(results); // results contains rows returned by server
-                console.log(fields); // fields contains extra meta data about results, if available
+    static execute(statements) {
+        var sql = statements.split(';');
+
+        sql.forEach(statement => {
+            if(statement) {
+                connection.query(
+                    statement,
+                    function (err, results, fields) {
+                        console.log(err);
+                        console.log(results); // results contains rows returned by server
+                        console.log(fields); // fields contains extra meta data about results, if available
+                    });
             }
-        );
+        })
     }
 
 }
