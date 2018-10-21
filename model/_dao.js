@@ -81,21 +81,34 @@ class _dao {
 
     static getColumnDefinintions() {
 
+
         let defs = _.reduce(this.meta().columns,(acc, column)=>{
+
             if(column) {
-                acc.push(column.name + ' varchar(100) null')
+                acc.push(_dao.defineColumns(column));
             }
             return acc;
         },['id int auto_increment primary key']);
 
+        defs = _.reduce(_.keys(this.meta().hasOne),(acc, column)=>{
+            if(column) {
+                acc.push(column + '_id int null');
+            }
+            return acc;
+        },defs);
+
         return defs.join(',');
+    }
+
+    static defineColumns(column) {
+        return column.name + ' varchar(100) null';
     }
 
     getInsertStatement() {
         var columns = this.getColumns().join(",");
         var values = this.getValues(this);
 
-        var insert = `INSERT INTO ${this.getTableName()}(${columns}) values(${values}) `;
+        var insert = `INSERT INTO ${this.constructor.name}(${columns}) values(${values});`;
         return insert;
     }
 
@@ -129,4 +142,16 @@ class _dao {
 
 module.exports = _dao;
 
+
+create table person
+(
+    id int auto_increment
+primary key,
+    firstName varchar(100) null,
+    lastName varchar(100) null,
+    phone varchar(100) null,
+    role_id int null,
+    constraint person_role_id_fk foreign key (role_id) references role (id)
+)
+;
 

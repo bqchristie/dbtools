@@ -18,11 +18,11 @@ roles.forEach(name=>{
 
 
 //Create People
-
-_.times(10000, function (data) {
+_.times(10, function (data) {
     let person = new Person({
         firstName: faker.name.firstName(),
         lastName: faker.name.lastName(),
+        phone: faker.phone.phoneNumber()
     });
     person.save();
 })
