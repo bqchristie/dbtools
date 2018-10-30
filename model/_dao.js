@@ -53,8 +53,7 @@ class _dao {
      * @param statement
      */
     static execute(statement) {
-        db.execute(statement)
-
+        return db.execute(statement);
     }
 
     /**
@@ -63,8 +62,13 @@ class _dao {
      * @returns {*}
      */
     static findById(id) {
-        console.log(`select * from ${this.constructor.meta().table} where id = ${id}`);
+        console.log(`select * from ${this.name.toLowerCase()} where id = ${id}`);
         return this.build({name: "Alice"});
+    }
+
+    static findAll(){
+        var statement = `select * from ${this.name.toLowerCase()}`
+        return this.execute(statement);
     }
 
     /**
@@ -117,16 +121,35 @@ class _dao {
     }
 
     getColumns() {
-        return _.keys(this);
+        let keys = _.keys(this)
+
+        keys = keys.filter(key=> {
+            return !_.isObject(this[key])
+        });
+
+        keys = keys.concat(this.getForeignKeys())
+
+        return keys;
+    }
+
+    getForeignKeys() {
+        let keys = _.keys(this);
+        keys = keys.filter(key=> {
+            return _.isObject(this[key])
+        });
+        return keys.map(key=> key + '_id');
     }
 
     getValues() {
         var columns = this.getColumns();
         var obj = this;
         return columns.reduce(function (accum, column) {
-            let val = obj[column];
+            let val = obj[_.trimEnd(column,'_id')];
             if (!_.isObject(val)) {
                 accum.push(obj.getValue(val));
+            }
+            else {
+                accum.push(val.id);
             }
             return accum;
         }, [])
@@ -143,15 +166,4 @@ class _dao {
 module.exports = _dao;
 
 
-create table person
-(
-    id int auto_increment
-primary key,
-    firstName varchar(100) null,
-    lastName varchar(100) null,
-    phone varchar(100) null,
-    role_id int null,
-    constraint person_role_id_fk foreign key (role_id) references role (id)
-)
-;
 

@@ -23,10 +23,6 @@ module.exports = class Person extends DAO {
             }
         }
     }
-
-
-
-
 }
 
 

@@ -15,23 +15,30 @@ class DBUtil {
     }
 
     static execute(statements) {
-        var sql = statements.split(';');
+        return new Promise(function (resolve, reject) {
+            var sql = statements.split(';');
+            var retval = [];
 
-        sql.forEach(statement => {
-            if(statement) {
-                connection.query(
-                    statement,
-                    function (err, results, fields) {
-                        if(err) {
-                            console.log(err);
-                        }
-                        // console.log(results); // results contains rows returned by server
-                        // console.log(fields); // fields contains extra meta data about results, if available
-                    });
-            }
-        })
-    }
-
+            sql.forEach(statement => {
+                console.log(statement);
+                if (statement) {
+                    connection.query(
+                        statement,
+                        function (err, results, fields) {
+                            if (err) {
+                                console.log(err);
+                                reject(err)
+                            }
+                            retval.push(results);
+                            resolve(retval);
+                            // console.log(results); // results contains rows returned by server
+                            // console.log(fields); // fields contains extra meta data about results, if available
+                        });
+                }
+            });
+        });
+    };
 }
+
 
 module.exports = DBUtil;

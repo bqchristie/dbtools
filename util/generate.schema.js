@@ -7,7 +7,7 @@ let Permission = require('../model/permission');
 
 
 DBUtil.generateTables([
-    Person
-    // Permission,
-    // Role
+    Person,
+    Permission,
+    Role,
 ]);
