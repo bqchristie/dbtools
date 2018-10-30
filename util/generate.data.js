@@ -39,3 +39,4 @@ Role.findAll()
     .catch(err => {
     console.log(err)
 });
+

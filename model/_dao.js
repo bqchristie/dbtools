@@ -61,12 +61,22 @@ class _dao {
      * @param id
      * @returns {*}
      */
-    static findById(id) {
-        console.log(`select * from ${this.name.toLowerCase()} where id = ${id}`);
-        return this.build({name: "Alice"});
+    static findById(id, lazy) {
+        var tableName = this.name.toLowerCase();
+        var build = this.build;
+        return new Promise(function (resolve, reject) {
+            console.log();
+            var obj = null;
+            db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
+                obj = build(result[0][0]);
+                resolve(obj);
+            }).catch(err => {
+                reject(err);
+            });
+        });
     }
 
-    static findAll(){
+    static findAll() {
         var statement = `select * from ${this.name.toLowerCase()}`
         return this.execute(statement);
     }
@@ -86,20 +96,20 @@ class _dao {
     static getColumnDefinintions() {
 
 
-        let defs = _.reduce(this.meta().columns,(acc, column)=>{
+        let defs = _.reduce(this.meta().columns, (acc, column) => {
 
-            if(column) {
+            if (column) {
                 acc.push(_dao.defineColumns(column));
             }
             return acc;
-        },['id int auto_increment primary key']);
+        }, ['id int auto_increment primary key']);
 
-        defs = _.reduce(_.keys(this.meta().hasOne),(acc, column)=>{
-            if(column) {
+        defs = _.reduce(_.keys(this.meta().hasOne), (acc, column) => {
+            if (column) {
                 acc.push(column + '_id int null');
             }
             return acc;
-        },defs);
+        }, defs);
 
         return defs.join(',');
     }
@@ -123,7 +133,7 @@ class _dao {
     getColumns() {
         let keys = _.keys(this)
 
-        keys = keys.filter(key=> {
+        keys = keys.filter(key => {
             return !_.isObject(this[key])
         });
 
@@ -134,17 +144,17 @@ class _dao {
 
     getForeignKeys() {
         let keys = _.keys(this);
-        keys = keys.filter(key=> {
+        keys = keys.filter(key => {
             return _.isObject(this[key])
         });
-        return keys.map(key=> key + '_id');
+        return keys.map(key => key + '_id');
     }
 
     getValues() {
         var columns = this.getColumns();
         var obj = this;
         return columns.reduce(function (accum, column) {
-            let val = obj[_.trimEnd(column,'_id')];
+            let val = obj[_.trimEnd(column, '_id')];
             if (!_.isObject(val)) {
                 accum.push(obj.getValue(val));
             }
