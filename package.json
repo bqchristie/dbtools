@@ -4,7 +4,10 @@
   "description": "",
   "main": "generate.data.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "dbinit": "run-s dbschema dbdata",
+    "dbschema": "node ./util/generate.schema.js",
+    "dbdata": "node ./util/generate.data.js"
   },
   "keywords": [],
   "author": "",

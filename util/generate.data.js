@@ -1,9 +1,9 @@
 let _ = require('lodash');
 let faker = require('faker');
 
-let Person = require('../model/person');
+let User = require('../model/user');
 let Role = require('../model/role');
-let Right = require('../model/permission');
+let RoleRight = require('../model/role.right');
 
 
 //Create Rights
@@ -27,7 +27,7 @@ Role.findAll()
 
         //Create People
         _.times(10, function (data) {
-            let person = new Person({
+            let person = new User({
                 firstName: faker.name.firstName(),
                 lastName: faker.name.lastName(),
                 phone: faker.phone.phoneNumber(),
@@ -35,10 +35,7 @@ Role.findAll()
             });
             person.save();
         })
-
     })
     .catch(err => {
     console.log(err)
 });
-
-
