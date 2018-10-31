@@ -61,14 +61,32 @@ class _dao {
      * @param id
      * @returns {*}
      */
-    static findById(id, lazy) {
+    static findById(id, eager) {
         var tableName = this.name.toLowerCase();
         var build = this.build;
+        var hasOne = this.meta().hasOne;
+
         return new Promise(function (resolve, reject) {
             console.log();
             var obj = null;
             db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
                 obj = build(result[0][0]);
+                let fKeys =  _.keys(obj).filter(key=> _.endsWith(key,'_id'))
+                console.log('!!!!!!!!!!!!!!!!');
+                console.log(fKeys);
+                console.log(hasOne);
+                fKeys.forEach(key => {
+                    var id = obj[key];
+                    var fn = hasOne[_.trimEnd(key,'_id')];
+                    console.log('??????????');
+                    console.log(id);
+                    console.log('****************');
+                    console.log(fn);
+                    fn.findById(id).then(result =>{
+                        obj[_.trimEnd(key,'_id')] = new fn(result);
+                    })
+
+                });
                 resolve(obj);
             }).catch(err => {
                 reject(err);
