@@ -1,6 +1,6 @@
 var DAO = require('./_dao');
 
-module.exports = class RoleRight extends DAO {
+module.exports = class Permission extends DAO {
 
     static meta() {
         return {
