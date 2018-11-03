@@ -9,38 +9,22 @@ class _dao {
      */
     constructor(json) {
         Object.assign(this, json);
-        this.tableName = this.getTableName();
     }
 
     /**
      *
      */
     save() {
-        this.id ? this.update() : this.insert();
-    }
-
-    /**
-     *
-     */
-    update() {
-        var statement = `update ${this.constructor.meta().table} values ${this.name}`;
-        this.execute(statement)
-    }
-
-    /**
-     *
-     */
-    insert() {
-        var statement = this.getInsertStatement();
-        console.log(statement);
-        this.constructor.execute(statement)
+        var sql = this.id ? null : this.getInsertStatement();;
+        db.execute(statement);
     }
 
     /**
      *
      */
     delete() {
-        console.log('');
+        var sql = '';
+        db.execute(statement);
     }
 
     /**
@@ -49,13 +33,7 @@ class _dao {
     validate() {
     }
 
-    /**
-     *
-     * @param statement
-     */
-    static execute(statement) {
-        return db.execute(statement);
-    }
+
 
     /**
      *
@@ -68,21 +46,15 @@ class _dao {
         var hasOne = this.meta().hasOne;
 
         return new Promise(function (resolve, reject) {
-            console.log();
             var obj = null;
             db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
                 obj = build(result[0][0]);
                 let fKeys =  _.keys(obj).filter(key=> _.endsWith(key,'_id'))
-                console.log('!!!!!!!!!!!!!!!!');
-                console.log(fKeys);
-                console.log(hasOne);
+
                 fKeys.forEach(key => {
                     var id = obj[key];
                     var fn = hasOne[_.trimEnd(key,'_id')];
-                    console.log('??????????');
-                    console.log(id);
-                    console.log('****************');
-                    console.log(fn);
+
                     fn.findById(id).then(result =>{
                         obj[_.trimEnd(key,'_id')] = new fn(result);
                     })
@@ -95,40 +67,38 @@ class _dao {
         });
     }
 
+    static findAll() {
+        var statement = `select * from ${this.name.toLowerCase()}`;
+        return db.execute(statement);
+    }
+
     static getTableName() {
        return this.name.split(/(?=[A-Z])/).join('_').toLowerCase()
     }
 
-    static findAll() {
-        var statement = `select * from ${this.name.toLowerCase()}`
-        return this.execute(statement);
-    }
+
 
     /**
      *
      */
     static createTable() {
-
-
         let ddl =
             `drop table if exists ${this.getTableName()};
              create table if not exists ${this.getTableName()}(${this.getColumnDefinitions()});`;
-
-        this.execute(ddl);
+        db.execute(ddl);
     }
 
 
 
     static getColumnDefinitions() {
+        let defs = ['id int auto_increment primary key'];
 
-
-        let defs = _.reduce(this.meta().columns, (acc, column) => {
-
+        defs = _.reduce(this.meta().columns, (acc, column) => {
             if (column) {
-                acc.push(_dao.defineColumns(column));
+                acc.push(_dao.defineColumn(column));
             }
             return acc;
-        }, ['id int auto_increment primary key']);
+        }, columnDefs);
 
         defs = _.reduce(this.meta().hasOne, (acc, column) => {
             if (column) {
@@ -140,7 +110,13 @@ class _dao {
         return defs.join(',');
     }
 
-    static defineColumns(column) {
+    /**
+     * This methdod should look at the data type and apply the appropriate DDL
+     *
+     * @param column
+     * @returns {string}
+     */
+    static defineColumn(column) {
         return column.name + ' varchar(100) null';
     }
 
@@ -151,10 +127,6 @@ class _dao {
         var insert = `INSERT INTO ${this.constructor.name}(${columns}) values(${values});`;
         return insert;
     }
-
-    // getTableName() {
-    //     return this.constructor.meta().table;
-    // }
 
     getColumns() {
         let keys = _.keys(this)

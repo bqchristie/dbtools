@@ -9,6 +9,7 @@ module.exports = class RolePermission extends DAO {
             hasOne: [role,permission]
         }
     }
+
     static build(data) {
         return new Role(data);
     }

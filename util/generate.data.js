@@ -4,12 +4,9 @@ let faker = require('faker');
 let User = require('../model/user');
 let Role = require('../model/role');
 let Permission = require('../model/permission');
-let RolePermsiion = require('../model/role.permission');
+let RolePermsion = require('../model/role.permission');
 
 
-//Create Rights
-
-//Create Roles
 let roles = ['admin', 'user', 'helpdesk']
 let permissions = ['read', 'update', 'delete']
 
