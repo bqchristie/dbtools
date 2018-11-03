@@ -1,5 +1,7 @@
 let _ = require('lodash');
+let q = require('q');
 let db = require('../util/dbutil');
+
 
 class _dao {
 
@@ -13,7 +15,7 @@ class _dao {
 
     save() {
         var sql = this.id ? null : this.getInsertStatement();;
-        db.execute(statement);
+        return db.execute(sql);
     }
 
     delete() {
@@ -37,7 +39,7 @@ class _dao {
                 acc.push(_dao.defineColumn(column));
             }
             return acc;
-        }, columnDefs);
+        }, defs);
 
         defs = _.reduce(this.meta().hasOne, (acc, column) => {
             if (column) {
@@ -53,28 +55,48 @@ class _dao {
 
     // Finders //
 
-    static findById(id, eager) {
+    /*
+     *  This should take one id or an array of ids.
+     */
+     static findById(id, eager) {
         var tableName = this.getTableName(this.name);
         var build = this.build;
         var hasOne = this.meta().hasOne;
 
+
         return new Promise(function (resolve, reject) {
             var obj = null;
+            //Get Main Object
             db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
                 obj = build(result[0][0]);
+
+                //Get foreign Objects
                 let fKeys =  _.keys(obj).filter(key=> _.endsWith(key,'_id'))
 
+                var promises = [];
+
                 fKeys.forEach(key => {
-                    var id = obj[key];
                     var fn = hasOne[_.trimEnd(key,'_id')];
-
-                    fn.findById(id).then(result =>{
-                        obj[_.trimEnd(key,'_id')] = new fn(result);
-                    })
-
+                    promises.push(fn.findById(obj[key]));
                 });
-                resolve(obj);
+
+
+                if(promises.length>0) {
+
+                    q.all(promises).then(results => {
+                        fKeys.forEach((key, idx) => {
+                            var fn = hasOne[_.trimEnd(key,'_id')];
+                            obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
+                        });
+                        resolve(obj);
+                    })
+                }
+                else {
+                    resolve(obj);
+                }
+
             }).catch(err => {
+                console.error(err);
                 reject(err);
             });
         });

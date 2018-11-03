@@ -1,13 +1,24 @@
 let _ = require('lodash');
 let faker = require('faker');
 
-let User = require('../model/user');
+
 let Role = require('../model/role');
-let RoleRight = require('../model/role.right');
+let User = require('../model/user')
 
 
-User.findById(1).then(user =>{
-    console.log(user.firstName);
+async function loadData(){
+    // let role = await Role.findById(1);
+    // console.log(role);
+
+    let user = await User.findById(1);
     console.log(user);
+    process.exit(0);
+}
 
-});
+
+loadData();
+
+
+
+
+

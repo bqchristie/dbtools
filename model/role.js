@@ -1,4 +1,5 @@
 var DAO = require('./_dao');
+var rolePermission = require('./role.permission');
 
 module.exports = class Role extends DAO {
 
@@ -6,7 +7,10 @@ module.exports = class Role extends DAO {
         return {
             columns: [
                 {name:'name'}
-            ]
+            ],
+            hasMany: {
+                permissions: rolePermission
+            }
         }
     }
     static build(data) {
