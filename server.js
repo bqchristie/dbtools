@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 
 app.use('/api', routes);
 
-var port = process.env.PORT || config.port;        // set our port
+var port = process.env.PORT || config.apiPort;        // set our port
 
 // START THE SERVER
 // =============================================================================

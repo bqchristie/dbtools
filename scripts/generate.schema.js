@@ -1,4 +1,4 @@
-let DBUtil = require('./dbutil');
+let DBUtil = require('../db/dbutil');
 let User = require('../model/user');
 let Role = require('../model/role');
 let Permission = require('../model/permission');

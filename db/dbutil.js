@@ -1,12 +1,8 @@
 const mysql = require('mysql2');
+const config = require('../config/config');
 
 // create the connection to database
-const connection = mysql.createConnection({
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'password',
-    database: 'test'
-});
+const connection = mysql.createConnection(config.db);
 
 class DBUtil {
 
@@ -20,7 +16,7 @@ class DBUtil {
             var retval = [];
 
             sql.forEach(statement => {
-                console.log(statement);
+
                 if (statement) {
                     connection.query(
                         statement,
@@ -31,8 +27,6 @@ class DBUtil {
                             }
                             retval.push(results);
                             resolve(retval);
-                            // console.log(results); // results contains rows returned by server
-                            // console.log(fields); // fields contains extra meta data about results, if available
                         });
                 }
             });

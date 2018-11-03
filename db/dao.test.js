@@ -1,6 +1,6 @@
-const DAO= require('./_dao');
-const Role = require('./role');
-const Permission = require('./permission');
+const DAO= require('./dao');
+const Role = require('../model/role');
+const Permission = require('../model/permission');
 
 class TestObject extends DAO {
 

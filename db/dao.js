@@ -1,9 +1,9 @@
 let _ = require('lodash');
 let q = require('q');
-let db = require('../util/dbutil');
+let db = require('./dbutil');
 
 
-class _dao {
+class dao {
 
     /**
      *
@@ -37,7 +37,7 @@ class _dao {
 
         defs = _.reduce(this.meta().columns, (acc, column) => {
             if (column) {
-                acc.push(_dao.defineColumn(column));
+                acc.push(dao.defineColumn(column));
             }
             return acc;
         }, defs);
@@ -65,11 +65,22 @@ class _dao {
         var hasOne = this.meta().hasOne;
 
         function _getRelatedObjectCollections(obj, resolve, meta) {
-            _.keys(meta.hasMany).forEach(key=>{
-                console.log("!!!!!!!!!!!!!!");
-                console.log(key);
+            if(!meta.hasMany) resolve(obj);
+
+            _.keys(meta.hasMany).forEach(key => {
+                if(meta.hasMany[key].meta().isJoin){
+                    var fn = meta.hasMany[key];
+                    fn.findRelated().then(result=>{
+                        obj[key] = result;
+                        resolve(obj);
+                    })
+                }
+                else {
+                    resolve(obj);
+                }
+
             });
-            resolve(obj);
+
         }
 
         function _getForeignObjects(obj, resolve, meta) {
@@ -116,6 +127,21 @@ class _dao {
     static findAll() {
         var statement = `select * from ${this.name.toLowerCase()}`;
         return db.execute(statement);
+    }
+
+    //Take a join fn and fn
+    //looks at relation
+    static findRelated() {
+        return new Promise(function (resolve, reject){
+            var sql = `select *
+                from role_permission as a
+            left join permission as b on a.permission_id = b.id
+            where a.role_id = 1;`;
+            db.execute(sql).then(results=>{
+                resolve(results[0]);
+            });
+
+        });
     }
 
 
@@ -188,7 +214,7 @@ class _dao {
     }
 }
 
-module.exports = _dao;
+module.exports = dao;
 
 
 

@@ -6,8 +6,8 @@
   "scripts": {
     "test": "jest",
     "dbinit": "run-s dbschema dbdata",
-    "dbschema": "node ./util/generate.schema.js",
-    "dbdata": "node ./util/generate.data.js"
+    "dbschema": "node ./scripts/generate.schema.js",
+    "dbdata": "node ./scripts/generate.data.js"
   },
   "keywords": [],
   "author": "",

@@ -1,4 +1,4 @@
-var DAO = require('./_dao');
+var DAO = require('../db/dao');
 var rolePermission = require('./role.permission');
 
 module.exports = class Role extends DAO {

@@ -10,6 +10,8 @@ async function loadData(){
     let role = await Role.findById(1);
     console.log(role);
 
+
+
     let user = await User.findById(1);
     console.log(user);
     process.exit(0);

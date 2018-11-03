@@ -1,4 +1,4 @@
-var DAO = require('./_dao');
+var DAO = require('../db/dao');
 
 module.exports = class Permission extends DAO {
 
@@ -8,6 +8,10 @@ module.exports = class Permission extends DAO {
                 {name:'name'}
             ]
         }
+    }
+
+    static build(data) {
+        return new Permission(data);
     }
 
     constructor(obj) {
