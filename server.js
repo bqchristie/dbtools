@@ -6,6 +6,7 @@ var config = require('./config/config')
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+app.use(express.static('public'))
 app.use('/api', routes);
 
 var port = process.env.PORT || config.apiPort;        // set our port
