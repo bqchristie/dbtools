@@ -9,6 +9,7 @@ class _dao {
      */
     constructor(json) {
         Object.assign(this, json);
+        this.tableName = this.getTableName();
     }
 
     /**
@@ -62,7 +63,7 @@ class _dao {
      * @returns {*}
      */
     static findById(id, eager) {
-        var tableName = this.name.toLowerCase();
+        var tableName = this.getTableName(this.name);
         var build = this.build;
         var hasOne = this.meta().hasOne;
 
@@ -94,6 +95,10 @@ class _dao {
         });
     }
 
+    static getTableName() {
+       return this.name.split(/(?=[A-Z])/).join('_').toLowerCase()
+    }
+
     static findAll() {
         var statement = `select * from ${this.name.toLowerCase()}`
         return this.execute(statement);
@@ -103,14 +108,18 @@ class _dao {
      *
      */
     static createTable() {
+
+
         let ddl =
-            `drop table if exists ${this.name.toLowerCase()};
-            create table if not exists ${this.name.toLowerCase()}(${this.getColumnDefinintions()});`;
+            `drop table if exists ${this.getTableName()};
+             create table if not exists ${this.getTableName()}(${this.getColumnDefinitions()});`;
 
         this.execute(ddl);
     }
 
-    static getColumnDefinintions() {
+
+
+    static getColumnDefinitions() {
 
 
         let defs = _.reduce(this.meta().columns, (acc, column) => {
@@ -143,9 +152,9 @@ class _dao {
         return insert;
     }
 
-    getTableName() {
-        return this.constructor.meta().table;
-    }
+    // getTableName() {
+    //     return this.constructor.meta().table;
+    // }
 
     getColumns() {
         let keys = _.keys(this)
