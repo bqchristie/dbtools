@@ -11,35 +11,48 @@ class _dao {
         Object.assign(this, json);
     }
 
-    /**
-     *
-     */
     save() {
         var sql = this.id ? null : this.getInsertStatement();;
         db.execute(statement);
     }
 
-    /**
-     *
-     */
     delete() {
         var sql = '';
         db.execute(statement);
     }
 
-    /**
-     *
-     */
     validate() {
     }
 
+    //Utility
+    static getTableName() {
+        return this.name.split(/(?=[A-Z])/).join('_').toLowerCase()
+    }
 
+    static getColumnDefinitions() {
+        let defs = ['id int auto_increment primary key'];
 
-    /**
-     *
-     * @param id
-     * @returns {*}
-     */
+        defs = _.reduce(this.meta().columns, (acc, column) => {
+            if (column) {
+                acc.push(_dao.defineColumn(column));
+            }
+            return acc;
+        }, columnDefs);
+
+        defs = _.reduce(this.meta().hasOne, (acc, column) => {
+            if (column) {
+                acc.push(column.name.toLowerCase() + '_id int null');
+            }
+            return acc;
+        }, defs);
+
+        return defs.join(',');
+    }
+
+    //SQL
+
+    // Finders //
+
     static findById(id, eager) {
         var tableName = this.getTableName(this.name);
         var build = this.build;
@@ -72,15 +85,8 @@ class _dao {
         return db.execute(statement);
     }
 
-    static getTableName() {
-       return this.name.split(/(?=[A-Z])/).join('_').toLowerCase()
-    }
 
 
-
-    /**
-     *
-     */
     static createTable() {
         let ddl =
             `drop table if exists ${this.getTableName()};
@@ -88,27 +94,6 @@ class _dao {
         db.execute(ddl);
     }
 
-
-
-    static getColumnDefinitions() {
-        let defs = ['id int auto_increment primary key'];
-
-        defs = _.reduce(this.meta().columns, (acc, column) => {
-            if (column) {
-                acc.push(_dao.defineColumn(column));
-            }
-            return acc;
-        }, columnDefs);
-
-        defs = _.reduce(this.meta().hasOne, (acc, column) => {
-            if (column) {
-                acc.push(column.name.toLowerCase() + '_id int null');
-            }
-            return acc;
-        }, defs);
-
-        return defs.join(',');
-    }
 
     /**
      * This methdod should look at the data type and apply the appropriate DDL
