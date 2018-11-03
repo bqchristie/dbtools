@@ -10,8 +10,4 @@ module.exports = class RolePermission extends DAO {
             isJoin: true,
         }
     }
-
-    constructor(obj) {
-        super(obj);
-    }
 }

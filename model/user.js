@@ -3,10 +3,6 @@ var role = require('./role');
 
 module.exports = class User extends DAO {
 
-    constructor(obj) {
-        super(obj);
-    }
-
     static build(data) {
         return new User(data);
     }

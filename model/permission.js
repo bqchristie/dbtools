@@ -13,8 +13,4 @@ module.exports = class Permission extends DAO {
     static build(data) {
         return new Permission(data);
     }
-
-    constructor(obj) {
-        super(obj);
-    }
 }

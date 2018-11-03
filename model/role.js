@@ -16,8 +16,4 @@ module.exports = class Role extends DAO {
     static build(data) {
         return new Role(data);
     }
-
-    constructor(obj) {
-        super(obj);
-    }
 }
