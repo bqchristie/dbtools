@@ -14,7 +14,8 @@ class _dao {
     }
 
     save() {
-        var sql = this.id ? null : this.getInsertStatement();;
+        var sql = this.id ? null : this.getInsertStatement();
+        ;
         return db.execute(sql);
     }
 
@@ -58,11 +59,44 @@ class _dao {
     /*
      *  This should take one id or an array of ids.
      */
-     static findById(id, eager) {
+    static findById(id, eager) {
         var tableName = this.getTableName(this.name);
         var build = this.build;
         var hasOne = this.meta().hasOne;
 
+        function _getRelatedObjectCollections(obj, resolve, meta) {
+            _.keys(meta.hasMany).forEach(key=>{
+                console.log("!!!!!!!!!!!!!!");
+                console.log(key);
+            });
+            resolve(obj);
+        }
+
+        function _getForeignObjects(obj, resolve, meta) {
+            let fKeys = _.keys(obj).filter(key => _.endsWith(key, '_id'))
+
+            var promises = [];
+
+            fKeys.forEach(key => {
+                var fn = hasOne[_.trimEnd(key, '_id')];
+                promises.push(fn.findById(obj[key]));
+            });
+
+
+            if (promises.length > 0) {
+
+                q.all(promises).then(results => {
+                    fKeys.forEach((key, idx) => {
+                        var fn = hasOne[_.trimEnd(key, '_id')];
+                        obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
+                    });
+                    _getRelatedObjectCollections(obj, resolve, meta);
+                })
+            }
+            else {
+                _getRelatedObjectCollections(obj, resolve, meta);
+            }
+        }
 
         return new Promise(function (resolve, reject) {
             var obj = null;
@@ -70,33 +104,10 @@ class _dao {
             db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
                 obj = build(result[0][0]);
 
-                //Get foreign Objects
-                let fKeys =  _.keys(obj).filter(key=> _.endsWith(key,'_id'))
-
-                var promises = [];
-
-                fKeys.forEach(key => {
-                    var fn = hasOne[_.trimEnd(key,'_id')];
-                    promises.push(fn.findById(obj[key]));
-                });
-
-
-                if(promises.length>0) {
-
-                    q.all(promises).then(results => {
-                        fKeys.forEach((key, idx) => {
-                            var fn = hasOne[_.trimEnd(key,'_id')];
-                            obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
-                        });
-                        resolve(obj);
-                    })
-                }
-                else {
-                    resolve(obj);
-                }
+                //Get foreign Objects - 0...1 relationships
+                _getForeignObjects(obj, resolve, obj.constructor.meta());
 
             }).catch(err => {
-                console.error(err);
                 reject(err);
             });
         });
@@ -106,7 +117,6 @@ class _dao {
         var statement = `select * from ${this.name.toLowerCase()}`;
         return db.execute(statement);
     }
-
 
 
     static createTable() {
