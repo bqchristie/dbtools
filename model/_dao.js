@@ -107,7 +107,6 @@ class _dao {
             `drop table if exists ${this.name.toLowerCase()};
             create table if not exists ${this.name.toLowerCase()}(${this.getColumnDefinintions()});`;
 
-        console.log(ddl);
         this.execute(ddl);
     }
 
@@ -122,9 +121,9 @@ class _dao {
             return acc;
         }, ['id int auto_increment primary key']);
 
-        defs = _.reduce(_.keys(this.meta().hasOne), (acc, column) => {
+        defs = _.reduce(this.meta().hasOne, (acc, column) => {
             if (column) {
-                acc.push(column + '_id int null');
+                acc.push(column.name.toLowerCase() + '_id int null');
             }
             return acc;
         }, defs);

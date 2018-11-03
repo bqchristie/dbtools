@@ -1,13 +1,15 @@
 let DBUtil = require('./dbutil');
 let User = require('../model/user');
 let Role = require('../model/role');
-let RoleRight = require('../model/role.right');
+let Permission = require('../model/permission');
+let RolePermission = require('../model/role.permission');
 
 // console.log(model.Person);
 
 
 DBUtil.generateTables([
     User,
-    RoleRight,
     Role,
+    Permission,
+    RolePermission
 ]);

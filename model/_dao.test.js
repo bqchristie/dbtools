@@ -1,13 +1,15 @@
 const DAO= require('./_dao');
+const Role = require('./role');
+const Permission = require('./permission');
 
-class Person extends DAO {
+class TestObject extends DAO {
 
     constructor(obj) {
         super(obj);
     }
 
     static build(data) {
-        return new Person(data);
+        return new TestObject(data);
     }
 
     static meta() {
@@ -18,32 +20,34 @@ class Person extends DAO {
                 {name: 'phone'}
             ],
             hasOne: {
-                role: role
+                role: Role,
+                permission: Permission
             }
         }
     }
 }
 
-let person = new Person({
+let testObj = new TestObject({
     firstName : 'Bob',
     lastName : 'Saget',
     phone: '(416)417-0178',
-    role: new Person()
+    role: new Role(),
+    permission: new Permission()
 });
 
 test('get columns from object', () => {
 
-    let columns = person.getColumns();
+    let columns = testObj.getColumns();
 
     console.log(columns);
-    expect(columns.length).toBe(4);
+    expect(columns.length).toBe(5);
 });
 
 
 test('get foregn keys for object', () =>{
-    let foreignKeys = person.getForeignKeys();
-    console.log(foreignKeys);
+    let foreignKeys = testObj.getForeignKeys();
     expect(foreignKeys[0]).toBe("role_id");
-    expect(foreignKeys.length).toBe(1);
+    expect(foreignKeys[1]).toBe("permission_id");
+    expect(foreignKeys.length).toBe(2);
 });
 
