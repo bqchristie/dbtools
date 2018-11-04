@@ -42,12 +42,15 @@ class dao {
             return acc;
         }, defs);
 
-        defs = _.reduce(this.meta().hasOne, (acc, column) => {
-            if (column) {
-                acc.push(column.name.toLowerCase() + '_id int null');
+        console.log(this.meta().hasOne);
+        defs = _.reduce(this.meta().hasOne, (acc, fn) => {
+            console.log(fn);
+            if (fn) {
+                acc.push(fn+ '_id int null');
             }
             return acc;
         }, defs);
+
 
         return defs.join(',');
     }
@@ -65,12 +68,12 @@ class dao {
         var hasOne = this.meta().hasOne;
 
         function _getRelatedObjectCollections(obj, resolve, meta) {
-            if(!meta.hasMany) resolve(obj);
+            if (!meta.hasMany) resolve(obj);
 
             _.keys(meta.hasMany).forEach(key => {
-                if(meta.hasMany[key].meta().isJoin){
+                if (meta.hasMany[key].meta().isJoin) {
                     var fn = meta.hasMany[key];
-                    fn.findRelated().then(result=>{
+                    fn.findRelated().then(result => {
                         obj[key] = result;
                         resolve(obj);
                     })
@@ -132,12 +135,12 @@ class dao {
     //Take a join fn and fn
     //looks at relation
     static findRelated() {
-        return new Promise(function (resolve, reject){
+        return new Promise(function (resolve, reject) {
             var sql = `select *
                 from role_permission as a
             left join permission as b on a.permission_id = b.id
             where a.role_id = 1;`;
-            db.execute(sql).then(results=>{
+            db.execute(sql).then(results => {
                 resolve(results[0]);
             });
 

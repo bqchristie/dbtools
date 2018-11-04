@@ -16,7 +16,7 @@ class DBUtil {
             var retval = [];
 
             sql.forEach(statement => {
-
+                console.log(statement);
                 if (statement) {
                     connection.query(
                         statement,

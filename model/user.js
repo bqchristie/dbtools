@@ -14,9 +14,7 @@ module.exports = class User extends DAO {
                 {name: 'lastName'},
                 {name: 'phone'}
             ],
-            hasOne: {
-                role: role
-            }
+            hasOne: [role]
         }
     }
 }
