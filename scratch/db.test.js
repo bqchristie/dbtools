@@ -6,21 +6,10 @@ let Role = require('../model/role');
 let User = require('../model/user')
 
 
-async function loadData(){
-    let role = await Role.findById(1);
-    console.log(role);
-
-
-
-    let user = await User.findById(1);
-    console.log(user);
-    process.exit(0);
-}
-
-
-loadData();
-
-
-
+User.findById(1).then(result=>{
+    console.log(result);
+}).catch(err=>{
+    console.log(err);
+})
 
 

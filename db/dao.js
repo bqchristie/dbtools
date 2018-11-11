@@ -15,7 +15,6 @@ class dao {
 
     save() {
         var sql = this.id ? null : this.getInsertStatement();
-        ;
         return db.execute(sql);
     }
 
@@ -92,7 +91,10 @@ class dao {
             var promises = [];
 
             fKeys.forEach(key => {
-                var fn = hasOne[_.trimEnd(key, '_id')];
+                console.log(key);
+                var fn = _.find(hasOne,function(clazz) {
+                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                });
                 promises.push(fn.findById(obj[key]));
             });
 
@@ -101,7 +103,9 @@ class dao {
 
                 q.all(promises).then(results => {
                     fKeys.forEach((key, idx) => {
-                        var fn = hasOne[_.trimEnd(key, '_id')];
+                        var fn = _.find(hasOne,function(clazz) {
+                            return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                        });
                         obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
                     });
                     _getRelatedObjectCollections(obj, resolve, meta);
