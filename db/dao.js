@@ -44,9 +44,9 @@ class dao {
 
         console.log(this.meta().hasOne);
         defs = _.reduce(this.meta().hasOne, (acc, fn) => {
-            console.log(fn);
-            if (fn) {
-                acc.push(fn+ '_id int null');
+            console.log(fn.name.toLowerCase());
+            if (fn.name) {
+                acc.push(fn.name.toLowerCase() + '_id int null');
             }
             return acc;
         }, defs);
