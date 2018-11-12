@@ -17,7 +17,4 @@ Role.meta = function () {
 }
 
 
-Role.build = function (data) {
-    return new Role(data);
-}
 

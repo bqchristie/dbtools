@@ -16,7 +16,3 @@ RolePermission.meta = function () {
         isJoin: true,
     }
 }
-
-RolePermission.build = function (data) {
-    return new RolePermission(data);
-}

@@ -17,9 +17,6 @@ User.meta = function () {
     }
 }
 
-User.build = function (data) {
-    return new User(data);
-}
 
 
 
