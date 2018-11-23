@@ -15,7 +15,6 @@ class dao {
 
     save() {
         var sql = this.id ? null : this.getInsertStatement();
-        ;
         return db.execute(sql);
     }
 
@@ -42,11 +41,9 @@ class dao {
             return acc;
         }, defs);
 
-        console.log(this.meta().hasOne);
         defs = _.reduce(this.meta().hasOne, (acc, fn) => {
-            console.log(fn);
-            if (fn) {
-                acc.push(fn+ '_id int null');
+            if (fn.name) {
+                acc.push(fn.name.split(/(?=[A-Z])/).join('_').toLowerCase() + '_id int null');
             }
             return acc;
         }, defs);
@@ -55,8 +52,6 @@ class dao {
         return defs.join(',');
     }
 
-    //SQL
-
     // Finders //
 
     /*
@@ -64,7 +59,7 @@ class dao {
      */
     static findById(id, eager) {
         var tableName = this.getTableName(this.name);
-        var build = this.build;
+        var build = this.prototype.constructor;
         var hasOne = this.meta().hasOne;
 
         function _getRelatedObjectCollections(obj, resolve, meta) {
@@ -92,7 +87,10 @@ class dao {
             var promises = [];
 
             fKeys.forEach(key => {
-                var fn = hasOne[_.trimEnd(key, '_id')];
+                console.log(key);
+                var fn = _.find(hasOne,function(clazz) {
+                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                });
                 promises.push(fn.findById(obj[key]));
             });
 
@@ -101,7 +99,9 @@ class dao {
 
                 q.all(promises).then(results => {
                     fKeys.forEach((key, idx) => {
-                        var fn = hasOne[_.trimEnd(key, '_id')];
+                        var fn = _.find(hasOne,function(clazz) {
+                            return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                        });
                         obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
                     });
                     _getRelatedObjectCollections(obj, resolve, meta);
@@ -116,7 +116,7 @@ class dao {
             var obj = null;
             //Get Main Object
             db.execute(`select * from ${tableName} where id = ${id}`).then(result => {
-                obj = build(result[0][0]);
+                obj = new build(result[0][0]);
 
                 //Get foreign Objects - 0...1 relationships
                 _getForeignObjects(obj, resolve, obj.constructor.meta());
@@ -136,8 +136,7 @@ class dao {
     //looks at relation
     static findRelated() {
         return new Promise(function (resolve, reject) {
-            var sql = `select *
-                from role_permission as a
+            var sql = `select * from role_permission as a
             left join permission as b on a.permission_id = b.id
             where a.role_id = 1;`;
             db.execute(sql).then(results => {

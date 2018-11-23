@@ -1,18 +1,18 @@
 var DAO = require('../db/dao');
+class RolePermission extends DAO {}
+
+module.exports = RolePermission;
+
+
 var role = require('./role');
 var user = require('./user');
 var permission = require('./permission');
 
-module.exports = class RolePermission extends DAO {
 
-    static meta() {
-        return {
-            hasOne: [role, permission],
-            isJoin: true,
-        }
-    }
+RolePermission.meta = function () {
 
-    static build(data) {
-        return new RolePermission(data);
+    return {
+        hasOne: [role, permission],
+        isJoin: true,
     }
 }
