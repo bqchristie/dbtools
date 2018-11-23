@@ -6,6 +6,10 @@ const connection = mysql.createConnection(config.db);
 
 class DBUtil {
 
+    static closeConnections(){
+        connection.close();
+    }
+
     static generateTables(objs) {
         objs.forEach(obj => obj.createTable())
     }

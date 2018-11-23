@@ -10,11 +10,12 @@ class dao {
      * @param json
      */
     constructor(json) {
+        console.log('In the constructor');
         Object.assign(this, json);
     }
 
     save() {
-        var sql = this.id ? null : this.getInsertStatement();
+        var sql = this.id ? this.getUpdateStatement() : this.getInsertStatement();
         return db.execute(sql);
     }
 
@@ -168,7 +169,6 @@ class dao {
     getInsertStatement() {
         var columns = this.getColumns().join(",");
         var values = this.getValues(this);
-
         var insert = `INSERT INTO ${this.constructor.name}(${columns}) values(${values});`;
         return insert;
     }
