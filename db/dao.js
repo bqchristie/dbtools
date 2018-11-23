@@ -1,6 +1,7 @@
 let _ = require('lodash');
 let q = require('q');
 let db = require('./dbutil');
+let qb = require('./query.builder');
 
 
 class dao {
@@ -10,12 +11,11 @@ class dao {
      * @param json
      */
     constructor(json) {
-        console.log('In the constructor');
         Object.assign(this, json);
     }
 
     save() {
-        var sql = this.id ? this.getUpdateStatement() : this.getInsertStatement();
+        var sql = this.id ? qb.getUpdateStatement(this) : qb.getInsertStatement(this);
         return db.execute(sql);
     }
 
@@ -26,6 +26,7 @@ class dao {
 
     validate() {
     }
+
 
     //Utility
     static getTableName() {
@@ -149,7 +150,7 @@ class dao {
 
 
     static createTable() {
-        let ddl =
+        let ddl = qb.
             `drop table if exists ${this.getTableName()};
              create table if not exists ${this.getTableName()}(${this.getColumnDefinitions()});`;
         db.execute(ddl);
@@ -206,13 +207,6 @@ class dao {
             }
             return accum;
         }, [])
-    }
-
-    getValue(val) {
-        if (_.isString(val)) {
-            return '\'' + val + '\'';
-        }
-        return val;
     }
 }
 

@@ -9,19 +9,11 @@ function getInsertStatement(dao) {
 
 function getUpdateStatement(dao) {
     var columns = _.keys(dao);
-
-    console.log(columns);
-
     columns = columns.map(column => {
         return column + '=' + getValue(dao[column]);
     });
 
-    columns = columns.join(', ');
-
-    console.log(columns);
-
-
-    let update = `UPDATE ${dao.constructor.getTableName()} SET ${columns} WHERE id = ${dao.id}`
+    let update = `UPDATE ${dao.constructor.getTableName()} SET ${columns.join(', ')} WHERE id = ${dao.id}`
 
     return update;
 }
