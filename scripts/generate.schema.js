@@ -5,9 +5,10 @@ let Permission = require('../model/permission');
 let RolePermission = require('../model/role.permission');
 
 
+
 DBUtil.generateTables([
-    User,
     Role,
     Permission,
-    RolePermission
+    RolePermission,
+    // User
 ]);
