@@ -60,7 +60,7 @@ class dao {
      *  This should take one id or an array of ids.
      */
     static findById(id, eager) {
-        var tableName = this.getTableName(this.name);
+        var tableName = this.getTableName();
         var build = this.prototype.constructor;
         var hasOne = this.meta().hasOne;
 
@@ -91,9 +91,14 @@ class dao {
             fKeys.forEach(key => {
                 console.log(key);
                 var fn = _.find(hasOne,function(clazz) {
-                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                    //Example compare ProductCategory to product_category_id
+                    //get it to productcategory to productcategory
+                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id').replace(/_/gi,'');
                 });
-                promises.push(fn.findById(obj[key]));
+                //If the fk is null don't get it
+                if(obj[key]) {
+                    promises.push(fn.findById(obj[key]));
+                }
             });
 
 
@@ -124,6 +129,7 @@ class dao {
                 _getForeignObjects(obj, resolve, obj.constructor.meta());
 
             }).catch(err => {
+                console.log(err);
                 reject(err);
             });
         });
@@ -150,7 +156,7 @@ class dao {
 
 
     static createTable() {
-        let ddl = qb.
+        let ddl =
             `drop table if exists ${this.getTableName()};
              create table if not exists ${this.getTableName()}(${this.getColumnDefinitions()});`;
         db.execute(ddl);
@@ -178,7 +184,7 @@ class dao {
         let keys = _.keys(this)
 
         keys = keys.filter(key => {
-            return !_.isObject(this[key])
+            return !_.isObject(this[key]) && !_.isNil(this[key]);
         });
 
         keys = keys.concat(this.getForeignKeys())
@@ -200,7 +206,8 @@ class dao {
         return columns.reduce(function (accum, column) {
             let val = obj[_.trimEnd(column, '_id')];
             if (!_.isObject(val)) {
-                accum.push(obj.getValue(val));
+                val = _.isString(val)? '\'' + val + '\'':val;
+                accum.push(val);
             }
             else {
                 accum.push(val.id);
