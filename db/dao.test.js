@@ -1,4 +1,9 @@
-const DAO= require('./dao');
+const iconv = require('iconv-lite')
+const encodings = require('iconv-lite/encodings');
+iconv.encodings = encodings;
+
+const DBUtils = require('./dbutil');
+const DAO = require('./dao');
 const Role = require('../model/role');
 const Permission = require('../model/permission');
 
@@ -35,6 +40,7 @@ let testObj = new TestObject({
     permission: new Permission()
 });
 
+
 test('get columns from object', () => {
 
     let columns = testObj.getColumns();
@@ -43,11 +49,13 @@ test('get columns from object', () => {
     expect(columns.length).toBe(5);
 });
 
-
-test('get foregn keys for object', () =>{
+test('get foreign keys for object', () => {
     let foreignKeys = testObj.getForeignKeys();
     expect(foreignKeys[0]).toBe("role_id");
     expect(foreignKeys[1]).toBe("permission_id");
     expect(foreignKeys.length).toBe(2);
 });
 
+test('generate create statement', ()=> {
+    expect(true).toBe(true);
+});

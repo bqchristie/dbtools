@@ -24,4 +24,29 @@ router.get('/:model', function(req, res){
     });
 });
 
+router.put('/:model', function(req, res){
+
+    console.log('In the put method!!!');
+    console.log(req.body);
+    console.log('!!!!!!!!!! c');
+    let model = models.getModel(req.params.model);
+    let instance = new model(req.body);
+    instance.save().then(result=>{
+        res.json(result);
+    }).catch(err=>{
+        res.json(err);
+    });
+});
+
+router.post('/:model', function(req, res){
+    let model = models.getModel(req.params.model);
+    let instance = new model(req.body);
+    instance.save().then(result=>{
+        res.json(result);
+    }).catch(err=>{
+        res.json(err);
+    });
+});
+
+
 module.exports = router;
