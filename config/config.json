@@ -1,5 +1,5 @@
 {
-  "apiPort": 8080,
+  "apiPort": 3030,
   "apiPath": "api",
   "apiVersion" : "v1",
   "db": {

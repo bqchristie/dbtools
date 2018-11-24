@@ -18,7 +18,7 @@ router.get('/:model/:id', function(req, res){
 
 router.get('/:model', function(req, res){
     models.getModel(req.params.model).findAll().then(result=>{
-        res.json(result);
+        res.json(result[0]);
     }).catch(err=>{
         res.json(err);
     });

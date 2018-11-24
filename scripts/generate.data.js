@@ -5,6 +5,7 @@ let User = require('../model/user');
 let Role = require('../model/role');
 let Permission = require('../model/permission');
 let RolePermsion = require('../model/role.permission');
+let Product = require('../model/product');
 
 
 function loadPermissions(){
@@ -64,11 +65,29 @@ function loadUsers() {
     });
 }
 
+function loadProducts(){
+    return new Promise((resolve, reject)=>{
+        let products = ['apple juice', 'ground beef', 'bananas','apples', 'tin foil', 'sliced bread', 'chicken breast'];
+        products = products.map(name=>{
+            let products = new Product({name: name});
+            return products.save();
+        });
+
+        Promise.all(products).then(results=>{
+            resolve('Products created...');
+        }).catch(err=>{
+            console.log(err);
+            reject(err);
+        });
+    })
+}
+
 
 let loaders = [];
-loaders.push(loadPermissions());
-loaders.push(loadRoles());
-loaders.push(loadUsers());
+// loaders.push(loadPermissions());
+// loaders.push(loadRoles());
+// loaders.push(loadUsers());
+loaders.push(loadProducts());
 
 Promise.all(loaders).then(results=>{
     results.forEach(result=>{
