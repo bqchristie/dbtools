@@ -47,22 +47,32 @@ function loadUsers() {
 
         Role.findAll().then(roles=>{
             console.log(roles[1]);
-            let users = [];
-            _.times(100000, function (data) {
-                let person = new User({
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName(),
-                    phone: faker.phone.phoneNumber(),
-                    role: roles[_.random(0, roles.length-1)]
+            let THOUSANDS = 1000;
+            _.times(THOUSANDS, function(idx){
+                let users = [];
+                _.times(1000, function (data) {
+                    let user = new User({
+                        firstName: faker.name.firstName(),
+                        lastName: faker.name.lastName(),
+                        phone: faker.phone.phoneNumber(),
+                        role: roles[_.random(0, roles.length-1)]
+                    });
+                    users.push(user);
                 });
-                users.push(person.save());
-            });
-            console.log('have an array of promises...');
-            Promise.all(users).then(results=>{
-                resolve('Users Generated');
-            }).catch( err => {
-                console.log(err);
+
+                User.bulkInsert(users).then(data =>{
+                    console.log(idx);
+                    console.log(data);
+
+                    if(idx == THOUSANDS-1) {
+                        resolve('Users Generated');
+                    }
+
+                }).catch( err => {
+                    console.log(err);
+                })
             })
+
         });
     });
 }
@@ -86,10 +96,10 @@ function loadProducts(){
 
 
 let loaders = [];
-loaders.push(loadPermissions());
-loaders.push(loadRoles());
+// loaders.push(loadPermissions());
+// loaders.push(loadRoles());
 loaders.push(loadUsers());
-loaders.push(loadProducts());
+//loaders.push(loadProducts());
 
 Promise.all(loaders).then(results=>{
     results.forEach(result=>{

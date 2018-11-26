@@ -18,6 +18,10 @@ class dao {
         return db.execute(queryHelper.createTableDDL(this));
     }
 
+    static bulkInsert(arr) {
+        return db.execute(queryHelper.getBulkInsertStatement(arr));
+    }
+
     static findAll() {
         let that = this;
         return new Promise(function (resolve, reject) {

@@ -48,6 +48,18 @@ function getInsertStatement(dao) {
     return insert;
 }
 
+function getBulkInsertStatement(daoArray){
+    let dao = daoArray[0];
+    let tableName = getDAOTableName(dao);
+    let columns = getSetColumns(dao).join(",");
+    let values = []
+    daoArray.forEach(dao=>{
+        values.push('(' + getSetValues(dao).join(',') + ')')
+    })
+    let insert = `INSERT INTO ${tableName}(${columns})\n VALUES\n ${values.join(',\n')};`;
+    return insert;
+}
+
 function getUpdateStatement(dao) {
     var columns = _.keys(dao);
     columns = columns.map(column => {
@@ -129,12 +141,12 @@ function getValue(val) {
 
 
 module.exports = {
-    getTableName: getDAOTableName,
     createTableDDL,
-    getInsertStatement,
-    getUpdateStatement,
     findAll,
-    findById
+    findById,
+    getBulkInsertStatement,
+    getInsertStatement,
+    getUpdateStatement
 }
 
 
