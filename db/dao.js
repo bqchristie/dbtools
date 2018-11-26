@@ -18,6 +18,12 @@ class dao {
         return db.execute(queryHelper.createTableDDL(this));
     }
 
+    static buildContraints() {
+        var ddl  = queryHelper.getFKConstraints(this);
+        console.log(ddl);
+    }
+
+
     static bulkInsert(arr) {
         return db.execute(queryHelper.getBulkInsertStatement(arr));
     }

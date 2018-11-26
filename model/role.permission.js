@@ -5,7 +5,6 @@ module.exports = RolePermission;
 
 
 var role = require('./role');
-var user = require('./user');
 var permission = require('./permission');
 
 

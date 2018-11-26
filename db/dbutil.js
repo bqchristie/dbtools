@@ -17,11 +17,20 @@ class DBUtil {
         objs.forEach(obj => {
             promises.push(obj.createTable());
         })
-
         Promise.all(promises).then(results =>{
-           process.exit();
+
+           this.buildConstraints(objs)
         });
 
+    }
+
+    static buildConstraints(objs){
+        objs.forEach(obj => {
+            //promises.push(obj.createTable());
+            obj.buildContraints();
+            //console.log(obj);
+        })
+        process.exit();
     }
 
     static execute(statements) {
