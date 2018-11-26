@@ -184,7 +184,7 @@ class dao {
         let keys = _.keys(this)
 
         keys = keys.filter(key => {
-            return !_.isObject(this[key]) && !_.isNil(this[key]);
+            return !_.isObject(this[key]);
         });
 
         keys = keys.concat(this.getForeignKeys())
