@@ -1,3 +1,14 @@
-let str = 'asasas'
+const _ = require('lodash');
 
-console.log(str.split(';').length);
+var name = 'Person';
+
+
+console.log(_.snakeCase(name));
+
+name = 'PersonCategory';
+
+console.log(_.snakeCase(name));
+
+name = 'PersonCategoryThing';
+
+console.log(_.snakeCase(name));

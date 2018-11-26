@@ -43,7 +43,7 @@ let testObj = new TestObject({
 
 test('get columns from object', () => {
 
-    let columns = testObj.getColumns();
+    let columns = testObj.getSetColumns();
 
     console.log(columns);
     expect(columns.length).toBe(5);

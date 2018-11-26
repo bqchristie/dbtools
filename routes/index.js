@@ -25,10 +25,6 @@ router.get('/:model', function(req, res){
 });
 
 router.put('/:model', function(req, res){
-
-    console.log('In the put method!!!');
-    console.log(req.body);
-    console.log('!!!!!!!!!! c');
     let model = models.getModel(req.params.model);
     let instance = new model(req.body);
     instance.save().then(result=>{
@@ -47,6 +43,10 @@ router.post('/:model', function(req, res){
         res.json(err);
     });
 });
+
+router.delete('/:model', function(req, res){
+    res.json({msg: 'not implemented yet'});
+})
 
 
 module.exports = router;

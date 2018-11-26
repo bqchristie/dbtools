@@ -11,7 +11,15 @@ class DBUtil {
     }
 
     static generateTables(objs) {
-        objs.forEach(obj => obj.createTable())
+        var promises = [];
+        objs.forEach(obj => {
+            promises.push(obj.createTable());
+        })
+
+        Promise.all(promises).then(results =>{
+           process.exit();
+        });
+
     }
 
     static execute(statements) {
