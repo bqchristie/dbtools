@@ -1,5 +1,7 @@
 const mysql = require('mysql2');
+const _ = require('lodash');
 const config = require('../config/config');
+
 
 // create the connection to database
 const connection = mysql.createConnection(config.db);
@@ -28,12 +30,14 @@ class DBUtil {
             var retval = [];
 
             sql.forEach(statement => {
+                //statement = _.escape(statement);
                 console.log(statement);
                 if (statement) {
                     connection.query(
                         statement,
                         function (err, results, fields) {
                             if (err) {
+                                console.log(statement);
                                 console.log(err);
                                 reject(err)
                             }

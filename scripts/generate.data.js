@@ -45,21 +45,23 @@ function loadRoles() {
 function loadUsers() {
     return new Promise((resolve, reject)=> {
 
-        Role.findById(1).then(role=>{
-            console.log(role);
-            var users = [];
-            _.times(10, function (data) {
+        Role.findAll().then(roles=>{
+            console.log(roles[1]);
+            let users = [];
+            _.times(100000, function (data) {
                 let person = new User({
                     firstName: faker.name.firstName(),
                     lastName: faker.name.lastName(),
                     phone: faker.phone.phoneNumber(),
-                    role: role
+                    role: roles[_.random(0, roles.length-1)]
                 });
                 users.push(person.save());
             });
-
+            console.log('have an array of promises...');
             Promise.all(users).then(results=>{
                 resolve('Users Generated');
+            }).catch( err => {
+                console.log(err);
             })
         });
     });
@@ -84,9 +86,9 @@ function loadProducts(){
 
 
 let loaders = [];
-// loaders.push(loadPermissions());
-// loaders.push(loadRoles());
-// loaders.push(loadUsers());
+loaders.push(loadPermissions());
+loaders.push(loadRoles());
+loaders.push(loadUsers());
 loaders.push(loadProducts());
 
 Promise.all(loaders).then(results=>{

@@ -17,13 +17,20 @@ class dao {
     static createTable() {
         return db.execute(queryHelper.createTableDDL(this));
     }
+
     static findAll() {
-        return db.execute(queryHelper.findAll());
+        let that = this;
+        return new Promise(function (resolve, reject) {
+            db.execute(queryHelper.findAll(that)).then(results => {
+                resolve(results[0]);
+            }).catch(err => reject(err))
+        })
     }
+
     static findById(id) {
-        var tableName = queryHelper.getTableName(this);
-        var build = this.prototype.constructor;
-        var hasOne = this.meta().hasOne;
+        let build = this.prototype.constructor;
+        let hasOne = this.meta().hasOne;
+        let that = this;
 
         function _getRelatedObjectCollections(obj, resolve, meta) {
             if (!meta.hasMany) resolve(obj);
@@ -51,13 +58,13 @@ class dao {
 
             fKeys.forEach(key => {
                 console.log(key);
-                var fn = _.find(hasOne,function(clazz) {
+                var fn = _.find(hasOne, function (clazz) {
                     //Example compare ProductCategory to product_category_id
                     //get it to productcategory to productcategory
-                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id').replace(/_/gi,'');
+                    return clazz.name.toLowerCase() === _.trimEnd(key, '_id').replace(/_/gi, '');
                 });
                 //If the fk is null don't get it
-                if(obj[key]) {
+                if (obj[key]) {
                     promises.push(fn.findById(obj[key]));
                 }
             });
@@ -67,7 +74,7 @@ class dao {
 
                 q.all(promises).then(results => {
                     fKeys.forEach((key, idx) => {
-                        var fn = _.find(hasOne,function(clazz) {
+                        var fn = _.find(hasOne, function (clazz) {
                             return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
                         });
                         obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
@@ -81,9 +88,9 @@ class dao {
         }
 
         return new Promise(function (resolve, reject) {
-            var obj = null;
+            let obj = null;
             //Get Main Object
-            db.execute(queryHelper.findById(dao, id)).then(result => {
+            db.execute(queryHelper.findById(that, id)).then(result => {
                 obj = new build(result[0][0]);
 
                 //Get foreign Objects - 0...1 relationships
@@ -95,6 +102,7 @@ class dao {
             });
         });
     }
+
     static findRelated() {
         return new Promise(function (resolve, reject) {
             var sql = `select * from role_permission as a

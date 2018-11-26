@@ -1,15 +1,22 @@
 const _ = require('lodash');
 
-//Utility
-function getTableName(dao) {
-    return _.snakeCase(dao.name);
+
+/**
+ * dao is either an instance of a class or its being passed
+ * from a static method.
+ *
+ * @param dao
+ */
+function getDAOTableName(dao) {
+    let name = dao.constructor.name == "Function" ? dao.name : dao.constructor.name;
+    return _.snakeCase(name);
 }
 
 function createTableDDL(dao) {
-    let tableName = getTableName(dao);
+    let tableName = getDAOTableName(dao);
     let ddl =
         `drop table if exists ${tableName};
-             create table if not exists ${tableName}(${getColumnDDL(dao.meta())});`;
+         create table if not exists ${tableName}(${getColumnDDL(dao.meta())});`;
     return ddl;
 }
 
@@ -34,9 +41,10 @@ function getColumnDDL(meta) {
 }
 
 function getInsertStatement(dao) {
-    let columns = dao.getSetColumns().join(",");
-    let values = dao.getSetValues(dao);
-    let insert = `INSERT INTO ${dao.constructor.getTableName()}(${columns}) values(${values});`;
+    let tableName = getDAOTableName(dao);
+    let columns = getSetColumns(dao).join(",");
+    let values = getSetValues(dao);
+    let insert = `INSERT INTO ${tableName}(${columns}) values(${values});`;
     return insert;
 }
 
@@ -51,12 +59,12 @@ function getUpdateStatement(dao) {
     return update;
 }
 
-function findAll(dao){
-    return `select * from ${getTableName(dao)}`;
+function findAll(dao) {
+    return `select * from ${getDAOTableName(dao)}`;
 }
 
 function findById(dao, id) {
-    return `select * from ${getTableName(dao)} where id = ${id}`
+    return `select * from ${getDAOTableName(dao)} where id = ${id}`
 }
 
 function getForeignKeys(dao) {
@@ -79,26 +87,30 @@ function getSetColumns(dao) {
         return !_.isObject(dao[key]);
     });
 
-    keys = keys.concat(dao.getForeignKeys())
+    keys = keys.concat(getForeignKeys(dao))
 
     return keys;
 }
 
-// function getSetValues(dao) {
-//     var columns = getSetColumns(dao);
-//     var obj = dao;
-//     return columns.reduce(function (accum, column) {
-//         let val = obj[_.trimEnd(column, '_id')];
-//         if (!_.isObject(val)) {
-//             val = _.isString(val)? '\'' + val + '\'':val;
-//             accum.push(val);
-//         }
-//         else {
-//             accum.push(val.id);
-//         }
-//         return accum;
-//     }, [])
-// }
+function getSetValues(dao) {
+    var columns = getSetColumns(dao);
+    var obj = dao;
+    return columns.reduce(function (accum, column) {
+        let val = obj[_.trimEnd(column, '_id')];
+        if (!_.isObject(val)) {
+            val = _.isString(val) ? '\'' + escSQL(val) + '\'' : val;
+            accum.push(val);
+        }
+        else {
+            accum.push(val.id);
+        }
+        return accum;
+    }, [])
+}
+
+function  escSQL(str) {
+    return _.replace(str, /'/gm,'\\\'')
+}
 
 /**
  * This method should look at the data type and apply the appropriate DDL
@@ -112,12 +124,12 @@ function defineColumn(column) {
 
 
 function getValue(val) {
-   return '\'' + val + '\'';
+    return '\'' + val + '\'';
 }
 
 
 module.exports = {
-    getTableName,
+    getTableName: getDAOTableName,
     createTableDDL,
     getInsertStatement,
     getUpdateStatement,

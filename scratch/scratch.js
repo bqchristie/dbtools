@@ -1,14 +1,7 @@
-const _ = require('lodash');
+let _ = require('lodash');
+let data = ['Bob','Doug','Barney']
 
-var name = 'Person';
 
+var str = "O'Reilly s'msah";
 
-console.log(_.snakeCase(name));
-
-name = 'PersonCategory';
-
-console.log(_.snakeCase(name));
-
-name = 'PersonCategoryThing';
-
-console.log(_.snakeCase(name));
+console.log(_.replace(str, /'/gm,'\\\''));
