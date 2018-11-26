@@ -173,13 +173,6 @@ class dao {
         return column.name + ' varchar(100) null';
     }
 
-    getInsertStatement() {
-        var columns = this.getColumns().join(",");
-        var values = this.getValues(this);
-        var insert = `INSERT INTO ${this.constructor.name}(${columns}) values(${values});`;
-        return insert;
-    }
-
     getColumns() {
         let keys = _.keys(this)
 
