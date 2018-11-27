@@ -18,19 +18,23 @@ class DBUtil {
             promises.push(obj.createTable());
         })
         Promise.all(promises).then(results =>{
-
            this.buildConstraints(objs)
         });
 
     }
 
     static buildConstraints(objs){
+        var promises = [];
         objs.forEach(obj => {
             //promises.push(obj.createTable());
-            obj.buildContraints();
+            promises.push(obj.buildContraints());
             //console.log(obj);
-        })
-        process.exit();
+        });
+
+        Promise.all(promises).then(results =>{
+            process.exit();
+        });
+
     }
 
     static execute(statements) {
@@ -39,7 +43,6 @@ class DBUtil {
             var retval = [];
 
             sql.forEach(statement => {
-                //statement = _.escape(statement);
                 console.log(statement);
                 if (statement) {
                     connection.query(

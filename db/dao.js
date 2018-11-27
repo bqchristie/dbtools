@@ -19,8 +19,9 @@ class dao {
     }
 
     static buildContraints() {
-        var ddl  = queryHelper.getFKConstraints(this);
-        console.log(ddl);
+        if (this.meta().hasOne) {
+            return db.execute(queryHelper.getFKConstraints(this));
+        }
     }
 
 

@@ -33,7 +33,7 @@ function getColumnDDL(meta) {
     //build the foreign keys
     defs = _.reduce(meta.hasOne, (acc, fn) => {
         if (fn.name) {
-            acc.push(fn.name.split(/(?=[A-Z])/).join('_').toLowerCase() + '_id int null');
+            acc.push(_.snakeCase(fn.name) + '_id int null');
         }
         return acc;
     }, defs);
@@ -43,17 +43,18 @@ function getColumnDDL(meta) {
 
 function getFKConstraints(dao) {
     let tableName = getDAOTableName(dao);
-    let foreignKeys = [].concat(dao.meta().hasOne);
+    let foreignKeys = dao.meta().hasOne;
     let foreignKeysDLL = [];
 
-
     foreignKeys.forEach(key=>{
-       let foreignTableName = getDAOTableName(key);
+        if(key) {
+            let foreignTableName = _.snakeCase(key.name);
 
-        let ddl  = `ALTER TABLE ${tableName}
-        ADD CONSTRAINT ${tableName}_${key}_fk
+            let ddl = `ALTER TABLE ${tableName}
+        ADD CONSTRAINT ${tableName}_${foreignTableName}_fk
         FOREIGN KEY (${foreignTableName}_id) REFERENCES ${foreignTableName} (id);`
-        foreignKeysDLL.push(ddl);
+            foreignKeysDLL.push(ddl);
+        }
     })
 
     return foreignKeysDLL.join(';\n');

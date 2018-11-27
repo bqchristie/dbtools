@@ -40,8 +40,6 @@ function loadRoles() {
     })
 }
 
-
-
 function loadUsers() {
     return new Promise((resolve, reject) => {
 
@@ -72,7 +70,6 @@ function loadProducts() {
         doBulkInsert(Product, products, resolve, reject);
     })
 }
-
 
 let primaryLoaders = [];
 primaryLoaders.push(loadPermissions());
