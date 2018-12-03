@@ -6,6 +6,7 @@ let Role = require('../model/role');
 let Permission = require('../model/permission');
 let RolePermsion = require('../model/role.permission');
 let Product = require('../model/product');
+let ProductCategory = require('../model/product.category');
 
 
 function doBulkInsert(dao, arr, resolve, reject) {
@@ -71,20 +72,30 @@ function loadProducts() {
     })
 }
 
+function loadProductCatergories() {
+    return new Promise((resolve, reject) => {
+        let productCategories = ['fruit', 'vegetables', 'dairy', 'deli', 'frozen goods', 'meat'];
+        productCategories = productCategories.map(name => {
+            let products = new ProductCategory({name: name});
+            return products;
+        });
+        doBulkInsert(Product, productCategories, resolve, reject);
+    })
+}
+
 let primaryLoaders = [];
 primaryLoaders.push(loadPermissions());
 primaryLoaders.push(loadRoles());
+primaryLoaders.push(loadProductCatergories());
 
 let secondaryLoaders = [];
 secondaryLoaders.push(loadUsers());
 secondaryLoaders.push(loadProducts());
 
 Promise.all(primaryLoaders).then(results => {
-    console.log('Doing primary loaders');
     results.forEach(result => {
         console.log(result);
     })
-    console.log('Doing secondary loaders');
     Promise.all(secondaryLoaders).then(results => {
         results.forEach(result => {
             console.log(result);

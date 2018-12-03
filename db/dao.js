@@ -6,6 +6,7 @@ let queryHelper = require('./query.helper');
 
 class dao {
 
+
     /**
      *
      * @param json
@@ -18,7 +19,7 @@ class dao {
         return db.execute(queryHelper.createTableDDL(this));
     }
 
-    static buildContraints() {
+    static buildConstraints() {
         if (this.meta().hasOne) {
             return db.execute(queryHelper.getFKConstraints(this));
         }

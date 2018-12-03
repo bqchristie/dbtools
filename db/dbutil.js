@@ -32,7 +32,7 @@ class DBUtil {
         var promises = [];
         objs.forEach(obj => {
             //promises.push(obj.createTable());
-            promises.push(obj.buildContraints());
+            promises.push(obj.buildConstraints());
             //console.log(obj);
         });
 

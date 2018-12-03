@@ -38,6 +38,11 @@ function getColumnDDL(meta) {
         return acc;
     }, defs);
 
+    //add audit columns
+
+    defs.push('created_date_time datetime not null default now()');
+    defs.push('updated_date_time datetime');
+
     return defs.join(',');
 }
 
@@ -64,8 +69,8 @@ function getFKConstraints(dao) {
 
 function getInsertStatement(dao) {
     let tableName = getDAOTableName(dao);
-    let columns = getSetColumns(dao).join(",");
-    let values = getSetValues(dao);
+    let columns = getInstanceColumns(dao).join(",");
+    let values = getInstanceValues(dao);
     let insert = `INSERT INTO ${tableName}(${columns}) values(${values});`;
     return insert;
 }
@@ -73,10 +78,10 @@ function getInsertStatement(dao) {
 function getBulkInsertStatement(daoArray){
     let dao = daoArray[0];
     let tableName = getDAOTableName(dao);
-    let columns = getSetColumns(dao).join(",");
+    let columns = getInstanceColumns(dao).join(",");
     let values = []
     daoArray.forEach(dao=>{
-        values.push('(' + getSetValues(dao).join(',') + ')')
+        values.push('(' + getInstanceValues(dao).join(',') + ')')
     })
     let insert = `INSERT INTO ${tableName}(${columns})\n VALUES\n ${values.join(',\n')};`;
     return insert;
@@ -109,12 +114,7 @@ function getForeignKeys(dao) {
     return keys.map(key => key + '_id');
 }
 
-/**
- * return only the column names that have actually been set on the object
- *
- * @returns {*[]}
- */
-function getSetColumns(dao) {
+function getInstanceColumns(dao) {
     let keys = _.keys(dao)
 
     keys = keys.filter(key => {
@@ -126,8 +126,8 @@ function getSetColumns(dao) {
     return keys;
 }
 
-function getSetValues(dao) {
-    var columns = getSetColumns(dao);
+function getInstanceValues(dao) {
+    var columns = getInstanceColumns(dao);
     var obj = dao;
     return columns.reduce(function (accum, column) {
         let val = obj[_.trimEnd(column, '_id')];
@@ -146,16 +146,9 @@ function  escSQL(str) {
     return _.replace(str, /'/gm,'\\\'')
 }
 
-/**
- * This method should look at the data type and apply the appropriate DDL
- *
- * @param column
- * @returns {string}
- */
 function defineColumn(column) {
     return column.name + ' varchar(100) null';
 }
-
 
 function getValue(val) {
     return '\'' + val + '\'';

@@ -5,10 +5,9 @@
   "main": "generate.data.js",
   "scripts": {
     "test": "jest  --forceExit --watch",
-    "dbinit": "run-s dbschema dbdata",
+    "dbinit": "npm run dbschema | npm run dbdata",
     "dbschema": "node ./scripts/generate.schema.js",
-    "dbdata": "node ./scripts/generate.data.js",
-    "dbinit": "npm run dbschema | npm run dbdata"
+    "dbdata": "node ./scripts/generate.data.js"
   },
   "keywords": [],
   "author": "",
