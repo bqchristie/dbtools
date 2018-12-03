@@ -7,7 +7,8 @@
     "test": "jest  --forceExit --watch",
     "dbinit": "run-s dbschema dbdata",
     "dbschema": "node ./scripts/generate.schema.js",
-    "dbdata": "node ./scripts/generate.data.js"
+    "dbdata": "node ./scripts/generate.data.js",
+    "dbinit": "npm run dbschema | npm run dbdata"
   },
   "keywords": [],
   "author": "",

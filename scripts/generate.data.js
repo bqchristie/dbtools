@@ -46,7 +46,7 @@ function loadUsers() {
         Role.findAll().then(roles => {
             console.log(roles[1]);
             let users = [];
-            _.times(10, function (data) {
+            _.times(1000, function (data) {
                 let user = new User({
                     firstName: faker.name.firstName(),
                     lastName: faker.name.lastName(),
@@ -89,5 +89,6 @@ Promise.all(primaryLoaders).then(results => {
         results.forEach(result => {
             console.log(result);
         })
+        process.exit()
     });
 });

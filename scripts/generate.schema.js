@@ -7,15 +7,21 @@ let Product = require('../model/product');
 let ProductCategory = require('../model/product.category');
 
 
-DBUtil.generateTables([
-    User,
-    Role,
-    Permission,
-    RolePermission,
-    Product,
-    ProductCategory
+DBUtil.toggleConstraints(false)
+    .then(results => {
+        return DBUtil.generateTables([
+            User,
+            Role,
+            Permission,
+            RolePermission,
+            Product,
+            ProductCategory])
+    })
+    .then(results => {
+        return DBUtil.toggleConstraints(true);
+    })
+    .catch( err => {console.log(err)});
 
-]);
 
 // DBUtil.maintainTables([
 //     User,

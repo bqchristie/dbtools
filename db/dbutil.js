@@ -12,6 +12,11 @@ class DBUtil {
         connection.close();
     }
 
+    static toggleConstraints(on) {
+        let statement = `SET FOREIGN_KEY_CHECKS=${on?1:0};`
+        return this.execute(statement);
+    }
+
     static generateTables(objs) {
         var promises = [];
         objs.forEach(obj => {
