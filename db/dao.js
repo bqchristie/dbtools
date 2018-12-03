@@ -20,7 +20,7 @@ class dao {
     }
 
     static buildConstraints() {
-        if (this.meta().hasOne) {
+        if (this.meta.hasOne) {
             return db.execute(queryHelper.getFKConstraints(this));
         }
     }
@@ -41,14 +41,14 @@ class dao {
 
     static findById(id) {
         let build = this.prototype.constructor;
-        let hasOne = this.meta().hasOne;
+        let hasOne = this.meta.hasOne;
         let that = this;
 
         function _getRelatedObjectCollections(obj, resolve, meta) {
             if (!meta.hasMany) resolve(obj);
 
             _.keys(meta.hasMany).forEach(key => {
-                if (meta.hasMany[key].meta().isJoin) {
+                if (meta.hasMany[key].meta.isJoin) {
                     var fn = meta.hasMany[key];
                     fn.findRelated().then(result => {
                         obj[key] = result;
@@ -106,7 +106,7 @@ class dao {
                 obj = new build(result[0][0]);
 
                 //Get foreign Objects - 0...1 relationships
-                _getRelatedObjects(obj, resolve, obj.constructor.meta());
+                _getRelatedObjects(obj, resolve, obj.constructor.meta);
 
             }).catch(err => {
                 console.log(err);

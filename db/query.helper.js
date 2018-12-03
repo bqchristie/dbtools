@@ -16,7 +16,7 @@ function createTableDDL(dao) {
     let tableName = getDAOTableName(dao);
     let ddl =
         `drop table if exists ${tableName};
-         create table if not exists ${tableName}(${getColumnDDL(dao.meta())});`;
+         create table if not exists ${tableName}(${getColumnDDL(dao.meta)});`;
     return ddl;
 }
 
@@ -48,7 +48,7 @@ function getColumnDDL(meta) {
 
 function getFKConstraints(dao) {
     let tableName = getDAOTableName(dao);
-    let foreignKeys = dao.meta().hasOne;
+    let foreignKeys = dao.meta.hasOne;
     let foreignKeysDLL = [];
 
     foreignKeys.forEach(key=>{

@@ -1,12 +1,13 @@
 var DAO = require('../db/dao');
-class Permission extends DAO {};
+
+class Permission extends DAO {
+};
 
 module.exports = Permission;
 
-Permission.meta = function(){
-    return {
-        columns: [
-            {name:'name'}
-        ]
-    }
+Permission.meta = {
+    columns: [
+        {name: 'name'}
+    ]
 }
+
