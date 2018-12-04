@@ -10,8 +10,7 @@ let ProductCategory = require('../model/product.category');
 
 
 function doBulkInsert(dao, json, resolve, reject) {
-    let data = mapData(json, dao)
-    return dao.bulkInsert(data);
+    return dao.bulkInsert(mapData(json, dao));
 }
 
 function mapData(data, clazz) {
@@ -38,18 +37,23 @@ function loadProductCatergories() {
 }
 
 function loadUsers() {
+
+    function fakeuser(roles) {
+        return new User({
+            firstName: faker.name.firstName(),
+            lastName: faker.name.lastName(),
+            phone: faker.phone.phoneNumber(),
+            role: roles[_.random(0, roles.length - 1)]
+        });
+    }
+
     return new Promise((resolve, reject) => {
 
         Role.findAll().then(roles => {
             console.log(roles[1]);
             let users = [];
             _.times(1000, function (data) {
-                let user = new User({
-                    firstName: faker.name.firstName(),
-                    lastName: faker.name.lastName(),
-                    phone: faker.phone.phoneNumber(),
-                    role: roles[_.random(0, roles.length - 1)]
-                });
+                let user = fakeuser(roles);
                 users.push(user);
             });
             doBulkInsert(User, users, resolve, reject);
