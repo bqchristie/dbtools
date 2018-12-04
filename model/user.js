@@ -1,4 +1,6 @@
 var DAO = require('../db/dao');
+let faker = require('faker');
+let _ = require('lodash');
 
 class User extends DAO {
 }
@@ -17,6 +19,13 @@ User.meta = {
 }
 
 
-
+User.fake  = function(roles){
+    return new User({
+        firstName: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        phone: faker.phone.phoneNumber(),
+        role: roles[_.random(0, roles.length - 1)]
+    });
+}
 
 
