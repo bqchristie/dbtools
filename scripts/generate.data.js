@@ -11,12 +11,7 @@ let ProductCategory = require('../model/product.category');
 
 function doBulkInsert(dao, json, resolve, reject) {
     let data = mapData(json, dao)
-    dao.bulkInsert(data).then(data => {
-        resolve('Bulk Data Generated');
-    }).catch(err => {
-        console.log(err);
-        reject(err);
-    })
+    return dao.bulkInsert(data);
 }
 
 function mapData(data, clazz) {
@@ -26,28 +21,20 @@ function mapData(data, clazz) {
 }
 
 function loadPermissions() {
-    return new Promise((resolve, reject) => {
-        doBulkInsert(Permission, require('./data/permissions'), resolve, reject)
-    })
+    return doBulkInsert(Permission, require('./data/permissions'));
 }
 
 function loadRoles() {
-    return new Promise((resolve, reject) => {
-        doBulkInsert(Role, require('./data/permissions'), resolve, reject)
-    })
+    return  doBulkInsert(Role, require('./data/permissions'));
 }
 
 
 function loadProducts() {
-    return new Promise((resolve, reject) => {
-        doBulkInsert(Product, require('./data/products'), resolve, reject)
-    })
+    return doBulkInsert(Product, require('./data/products'));
 }
 
 function loadProductCatergories() {
-    return new Promise((resolve, reject) => {
-        doBulkInsert(ProductCategory, require('./data/product.categories'), resolve, reject)
-    })
+    return doBulkInsert(ProductCategory, require('./data/product.categories'))
 }
 
 function loadUsers() {
