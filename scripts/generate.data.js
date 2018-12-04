@@ -9,8 +9,9 @@ let Product = require('../model/product');
 let ProductCategory = require('../model/product.category');
 
 
-function doBulkInsert(dao, arr, resolve, reject) {
-    dao.bulkInsert(arr).then(data => {
+function doBulkInsert(dao, json, resolve, reject) {
+    let data = mapData(json, dao)
+    dao.bulkInsert(data).then(data => {
         resolve('Bulk Data Generated');
     }).catch(err => {
         console.log(err);
@@ -18,26 +19,34 @@ function doBulkInsert(dao, arr, resolve, reject) {
     })
 }
 
+function mapData(data, clazz) {
+    return data.map(obj => {
+        return new clazz(obj);
+    });
+}
+
 function loadPermissions() {
     return new Promise((resolve, reject) => {
-        let permissions = ['read', 'update', 'delete'];
-        permissions = permissions.map(name => {
-            let permission = new Permission({name: name});
-            return permission;
-        });
-
-        doBulkInsert(Permission, permissions, resolve, reject)
+        doBulkInsert(Permission, require('./data/permissions'), resolve, reject)
     })
 }
 
 function loadRoles() {
     return new Promise((resolve, reject) => {
-        let roles = ['admin', 'user', 'helpdesk'];
-        roles = roles.map(name => {
-            let role = new Role({name: name});
-            return role;
-        });
-        doBulkInsert(Role, roles, resolve, reject)
+        doBulkInsert(Role, require('./data/permissions'), resolve, reject)
+    })
+}
+
+
+function loadProducts() {
+    return new Promise((resolve, reject) => {
+        doBulkInsert(Product, require('./data/products'), resolve, reject)
+    })
+}
+
+function loadProductCatergories() {
+    return new Promise((resolve, reject) => {
+        doBulkInsert(ProductCategory, require('./data/product.categories'), resolve, reject)
     })
 }
 
@@ -59,28 +68,6 @@ function loadUsers() {
             doBulkInsert(User, users, resolve, reject);
         });
     });
-}
-
-function loadProducts() {
-    return new Promise((resolve, reject) => {
-        let products = ['apple juice', 'ground beef', 'bananas', 'apples', 'tin foil', 'sliced bread', 'chicken breast'];
-        products = products.map(name => {
-            let products = new Product({name: name});
-            return products;
-        });
-        doBulkInsert(Product, products, resolve, reject);
-    })
-}
-
-function loadProductCatergories() {
-    return new Promise((resolve, reject) => {
-        let productCategories = ['fruit', 'vegetables', 'dairy', 'deli', 'frozen goods', 'meat'];
-        productCategories = productCategories.map(name => {
-            let products = new ProductCategory({name: name});
-            return products;
-        });
-        doBulkInsert(Product, productCategories, resolve, reject);
-    })
 }
 
 let primaryLoaders = [];
