@@ -18,54 +18,30 @@ function _mapData(data, clazz) {
     });
 }
 
-function loadPermissions() {
-    return doBulkInsert(Permission, require('./data/permissions'));
-}
 
-function loadRoles() {
-    return  doBulkInsert(Role, require('./data/permissions'));
-}
-
-
-function loadProducts() {
-    return doBulkInsert(Product, require('./data/products'));
-}
-
-function loadProductCatergories() {
-    return doBulkInsert(ProductCategory, require('./data/product.categories'))
-}
-
-function loadUsers() {
-
-    return new Promise((resolve, reject) => {
-
+function generateFakeUsers() {
+    return new Promise( (resolve, reject) => {
         Role.findAll().then(roles => {
             let users = [];
             _.times(1000, function () {
                 users.push(User.fake(roles));
             });
-            doBulkInsert(User, users, resolve, reject);
+            resolve(users);
         });
-    });
+    })
 }
 
-let primaryLoaders = [];
-primaryLoaders.push(loadPermissions());
-primaryLoaders.push(loadRoles());
-primaryLoaders.push(loadProductCatergories());
 
-let secondaryLoaders = [];
-secondaryLoaders.push(loadUsers());
-secondaryLoaders.push(loadProducts());
-
-Promise.all(primaryLoaders).then(results => {
-    results.forEach(result => {
-        console.log(result);
+Promise.resolve()
+    .then(() => doBulkInsert(Permission, require('./data/permissions')))
+    .then(() => doBulkInsert(Role, require('./data/roles')))
+    .then(() => doBulkInsert(Permission, require('./data/permissions')))
+    .then(() => doBulkInsert(Product, require('./data/products')))
+    .then(() => doBulkInsert(ProductCategory, require('./data/product.categories')))
+    .then(() => generateFakeUsers())
+    .then((users) => doBulkInsert(User, users))
+    .catch(err => console.log(err))
+    .then(() => {
+        console.log('done');
+        process.exit();
     })
-    Promise.all(secondaryLoaders).then(results => {
-        results.forEach(result => {
-            console.log(result);
-        })
-        process.exit()
-    });
-});

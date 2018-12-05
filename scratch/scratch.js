@@ -1,7 +1,12 @@
-let _ = require('lodash');
-let data = ['Bob','Doug','Barney']
+function doLoad(n) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            console.log("someAsyncFunction: ", n)
+            resolve(n)
+        }, Math.random() * 1500)
+    })
+}
 
+let promises = [];
+promises.push()
 
-var str = "O'Reilly s'msah";
-
-console.log(_.replace(str, /'/gm,'\\\''));
