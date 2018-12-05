@@ -1,5 +1,4 @@
 let _ = require('lodash');
-let q = require('q');
 let db = require('./dbutil');
 let queryHelper = require('./query.helper');
 
@@ -84,7 +83,7 @@ class dao {
 
             if (promises.length > 0) {
 
-                q.all(promises).then(results => {
+                Promise.all(promises).then(results => {
                     fKeys.forEach((key, idx) => {
                         var fn = _.find(hasOne, function (clazz) {
                             return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
