@@ -5,6 +5,10 @@ class List extends DAO {
 
 module.exports = List;
 
+/**
+ * Add related object dependencies here
+ * @type {User}
+ */
 let user = require('./user');
 let listShare = require('./list.share');
 

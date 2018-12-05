@@ -1,4 +1,5 @@
 var inquirer = require('inquirer');
+var model = require('./lib/model')
 
 var questions = [
     {
@@ -11,4 +12,5 @@ inquirer
     .prompt(questions)
     .then(answers => {
         console.log(answers);
+        model.generateModel(answers.model)
     });
