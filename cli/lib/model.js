@@ -45,7 +45,7 @@ function className(str) {
 
 function writeFile(code) {
     const fs = require('fs');
-    fs.writeFile("../model/" + code.name, code.code, function (err) {
+    fs.writeFile("./model/" + code.name, code.code, function (err) {
         if (err) {
             return console.log(err);
         }
