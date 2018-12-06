@@ -1,12 +1,6 @@
-function doLoad(n) {
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            console.log("someAsyncFunction: ", n)
-            resolve(n)
-        }, Math.random() * 1500)
-    })
-}
+let _ = require('lodash')
 
-let promises = [];
-promises.push()
+let str = ('test_idol_id')
+str =  _.replace(str,/_id$/gm,'')
 
+console.log(str)

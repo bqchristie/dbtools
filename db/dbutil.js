@@ -1,12 +1,20 @@
 const mysql = require('mysql2');
 const _ = require('lodash');
+const bcrypt = require('bcryptjs');
 const config = require('../config/config');
+
 
 
 // create the connection to database
 const connection = mysql.createConnection(config.db);
 
 class DBUtil {
+
+    static encrypt(plainText){
+        var salt = bcrypt.genSaltSync(9);
+        var hash = bcrypt.hashSync(plainText, salt);
+        return hash;
+    }
 
     static closeConnections(){
         connection.close();

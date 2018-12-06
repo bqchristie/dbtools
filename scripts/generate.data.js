@@ -1,6 +1,5 @@
 let _ = require('lodash');
 
-
 let User = require('../model/user');
 let Role = require('../model/role');
 let Permission = require('../model/permission');
@@ -23,11 +22,11 @@ function generateFakeUsers() {
     return new Promise( (resolve, reject) => {
         Role.findAll().then(roles => {
             let users = [];
-            _.times(1000, function () {
+            _.times(10, function () {
                 users.push(User.fake(roles));
             });
             resolve(users);
-        });
+        }).catch(err=> console.log(err));
     })
 }
 
@@ -39,7 +38,7 @@ Promise.resolve()
     .then(() => doBulkInsert(Product, require('./data/products')))
     .then(() => doBulkInsert(ProductCategory, require('./data/product.categories')))
     .then(() => generateFakeUsers())
-    .then((users) => doBulkInsert(User, users))
+    .then((users) => { console.log('have users'); doBulkInsert(User, users) })
     .catch(err => console.log(err))
     .then(() => {
         console.log('done');

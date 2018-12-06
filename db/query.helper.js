@@ -78,6 +78,7 @@ function getInsertStatement(dao) {
 function getBulkInsertStatement(daoArray){
     let dao = daoArray[0];
     let tableName = getDAOTableName(dao);
+    console.log(`Doing bulk insert for ${tableName}....`);
     let columns = getInstanceColumns(dao).join(",");
     let values = []
     daoArray.forEach(dao=>{
@@ -130,7 +131,7 @@ function getInstanceValues(dao) {
     var columns = getInstanceColumns(dao);
     var obj = dao;
     return columns.reduce(function (accum, column) {
-        let val = obj[_.trimEnd(column, '_id')];
+        let val = obj[_.replace(column,/_id$/gm,'')];
         if (!_.isObject(val)) {
             val = _.isString(val) ? '\'' + escSQL(val) + '\'' : val;
             accum.push(val);
