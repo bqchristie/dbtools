@@ -119,9 +119,7 @@ class dao {
 
     static findRelated(owner, isJoin) {
         let that = this;
-        let sql = queryHelp.findRelatedObjects(owner, this, isJoin);
-
-
+        let sql = queryHelper.findRelatedObjects(owner, this, isJoin);
 
         return new Promise(function (resolve, reject) {
 

@@ -11,6 +11,7 @@ class User extends DAO {
 module.exports = User;
 
 var role = require('./role');
+var list = require('./list');
 
 User.meta = {
     columns: [
@@ -20,7 +21,10 @@ User.meta = {
         {name: 'lastName'},
         {name: 'phone'},
     ],
-    hasOne: [role]
+    hasOne: [role],
+    hasMany: {
+        lists: list
+    }
 }
 
 
