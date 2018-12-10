@@ -103,6 +103,14 @@ function findAll(dao) {
     return `select * from ${getDAOTableName(dao)}`;
 }
 
+function find(dao, obj) {
+    let conditions = []
+    _.keys(obj).forEach(function(key){
+        conditions.push(`${key} = '${obj[key]}'`)
+    });
+    return `select * from ${getDAOTableName(dao)}  where ${conditions.join(' and ')}`;
+}
+
 function findById(dao, id) {
     return `select * from ${getDAOTableName(dao)} where id = ${id}`
 }
@@ -159,6 +167,7 @@ function getValue(val) {
 module.exports = {
     createTableDDL,
     findAll,
+    find,
     findById,
     getBulkInsertStatement,
     getFKConstraints,

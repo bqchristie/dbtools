@@ -38,6 +38,15 @@ class dao {
         })
     }
 
+    static find(obj){
+        let that = this;
+        return new Promise(function (resolve, reject) {
+            db.execute(queryHelper.find(that, obj)).then(results => {
+                resolve(results[0]);
+            }).catch(err => reject(err))
+        })
+    }
+
     static findById(id) {
         let build = this.prototype.constructor;
         let hasOne = this.meta.hasOne;

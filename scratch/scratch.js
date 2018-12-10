@@ -1,6 +1,13 @@
 let _ = require('lodash')
 
-let str = ('test_idol_id')
-str =  _.replace(str,/_id$/gm,'')
 
-console.log(str)
+var tests = [' / ', '/', '    / ','4 / 22 ','3 / ', '3/ ', '', ' ', null]
+
+tests.forEach(test=>{
+    var res = _.replace(test,/[ /]/gm, '').length === 0;
+    console.log(res);
+
+})
+
+//check for null or when the only chars are space or /
+//_.replace(str,/[ /]/gm, '').length === 0

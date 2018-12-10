@@ -17,3 +17,10 @@ test('getBulkInsertStatement', ()=> {
     console.log(sql);
     expect(true).toBe(true);
 })
+
+
+test('findBy', () => {
+    let sql = qh.find(User, {username: 'bob', password:'ganoosh'});
+    console.log(sql);
+    expect(true).toBe(true);
+})

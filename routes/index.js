@@ -1,12 +1,10 @@
 let router = require('express').Router();              // get an instance of the express Router
 let models = require('../model/_registry');
 
-
 //test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
     res.json({ message: 'hooray! welcome to our api!' });
 });
-
 
 router.get('/:model/:id', function(req, res){
     models.getModel(req.params.model).findById(req.params.id).then(result=>{
