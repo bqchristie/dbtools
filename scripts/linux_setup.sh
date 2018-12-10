@@ -3,7 +3,6 @@ nvm install node
 
 npm install pm2 -g
 
-
 sudo apt-get update
 sudo apt install git-all
 
@@ -18,7 +17,7 @@ systemctl enable mysql
 UPDATE mysql.user SET Password = PASSWORD('password') WHERE User = 'root';
 CREATE USER 'app' IDENTIFIED BY 'password'
 GRANT ALL PRIVILEGES ON *.* TO 'app'@'localhost';
-CREA DATABASE test;
+CREATE DATABASE test;
 
 FLUSH PRIVILEGES;
 

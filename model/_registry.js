@@ -7,13 +7,13 @@ let List = require('./list');
 let ListItem = require('./list.item');
 
 var mappings = {
-    user: User,
-    role: Role,
-    permission: Permission,
-    product: Product,
-    productCategory: ProductCategory,
-    list: List,
-    listItem: ListItem
+    'user': User,
+    'role': Role,
+    'permission': Permission,
+    'product': Product,
+    'product-category': ProductCategory,
+    'list': List,
+    'list-item': ListItem
 }
 
 let registry = {

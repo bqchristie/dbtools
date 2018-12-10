@@ -123,6 +123,22 @@ function getForeignKeys(dao) {
     return keys.map(key => key + '_id');
 }
 
+function findRelatedObjects(ownerObj, relatedObj, isJoin) {
+
+    if(isJoin) {
+        var joinedObj = _.find(relatedObj.meta.hasOne,function(fn){
+            return getDAOTableName(fn) != getDAOTableName(ownerObj);
+        });
+
+        return `select * from ${getDAOTableName(relatedObj)} as a
+                left join ${getDAOTableName(joinedObj)} as b on a.${getDAOTableName(joinedObj)}_id = b.id
+                where ${getDAOTableName(ownerObj)}_id = ${ownerObj.id};`
+    }
+    else {
+        return `select * from ${getDAOTableName(relatedObj)} where ${getDAOTableName(ownerObj)}_id = ${ownerObj.id};`
+    }
+}
+
 function getInstanceColumns(dao) {
     let keys = _.keys(dao)
 
@@ -169,10 +185,12 @@ module.exports = {
     findAll,
     find,
     findById,
+    findRelatedObjects,
     getBulkInsertStatement,
     getFKConstraints,
     getInsertStatement,
     getUpdateStatement,
+
 }
 
 

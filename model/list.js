@@ -10,7 +10,7 @@ module.exports = List;
  * @type {User}
  */
 let user = require('./user');
-let listShare = require('./list.share');
+let listItem = require('./list.item');
 
 List.meta = {
     columns: [
@@ -18,6 +18,6 @@ List.meta = {
     ],
     hasOne: [user],
     hasMany: {
-        listShares: listShare
+        listItems: listItem
     }
 }
