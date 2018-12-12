@@ -5,24 +5,27 @@
   "main": "generate.data.js",
   "scripts": {
     "test": "jest  --forceExit --watch",
-    "dbinit": "run-s dbschema dbdata",
+    "dbinit": "npm run dbschema | npm run dbdata",
     "dbschema": "node ./scripts/generate.schema.js",
-    "dbdata": "node ./scripts/generate.data.js"
+    "dbdata": "node ./scripts/generate.data.js",
+    "modelgen": "node ./cli/index.js",
+    "api": "node ./server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "faker": "^4.1.0",
-    "jest": "^23.6.0",
-    "lodash": "^4.17.11",
-    "mysql2": "^1.6.1"
-  },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "dotenv": "^6.2.0",
-    "q": "^1.5.1"
+    "express": "^4.16.4",
+    "faker": "^4.1.0",
+    "jsonwebtoken": "^8.4.0",
+    "mysql2": "^1.6.1",
+    "passport": "^0.4.0",
+    "q": "^1.5.1",
+    "require-dir": "^1.2.0",
+    "sql-formatter": "^2.3.2",
+    "yargs": "^12.0.5"
   }
 }

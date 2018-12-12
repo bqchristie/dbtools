@@ -10,5 +10,6 @@
   "ssl": {
     "path": "/etc/letsencrypt/live/api.fuudlist.com/",
     "files": ["cert.pem",  "chain.pem",  "fullchain.pem", "privkey.pem"]
-  }
+  },
+  "secret": "supersecret"
 }

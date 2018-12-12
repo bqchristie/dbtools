@@ -1,25 +1,16 @@
+let _ = require('lodash');
+let requireDir = require('require-dir');
 let DBUtil = require('../db/dbutil');
-let User = require('../model/user');
-let Role = require('../model/role');
-let Permission = require('../model/permission');
-let RolePermission = require('../model/role.permission');
-let Product = require('../model/product');
-let ProductCategory = require('../model/product.category');
+let model = requireDir('../model');
+let modelNames = _.keys(model).filter(key => !_.startsWith(key, '_'));
 
 
-DBUtil.generateTables([
-    User,
-    Role,
-    Permission,
-    RolePermission,
-    Product,
-    ProductCategory
-
-]);
-
-// DBUtil.maintainTables([
-//     User,
-//     Role,
-//     Permission,
-//     RolePermission
-// ])
+Promise.resolve()
+    .then(result => DBUtil.toggleConstraints(false))
+    .then(result => DBUtil.generateTables(modelNames.map(modelName => model[modelName])))
+    .then(result => DBUtil.toggleConstraints(true))
+    .catch(err => console.log(err))
+    .then(() => {
+        console.log('done');
+        process.exit();
+    })

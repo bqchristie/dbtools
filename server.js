@@ -5,25 +5,26 @@ var cors  = require('cors');
 const http = require('http');
 const https = require('https');
 const fs = require('fs');
-
+const jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
-var routes = require('./routes');
 var config = require('./config/config');
+let openRoutes = require('./routes/auth')
+let secureRoutes = require('./routes/index');
+let verifyToken = require('./routes/verify.token');
+
 
 console.log(process.env.ENVIRONMENT);
 
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
 app.use(express.static('public'))
-app.use('/api', routes);
+app.use('/auth', openRoutes);
+app.use('/api', verifyToken, secureRoutes);
 
 var httpPort = process.env.HTTP_PORT;        // set our port
 var httpsPort = process.env.HTTPS_PORT;        // set our port
 
-// START THE SERVER
-// =============================================================================
 
 const httpServer = http.createServer(app);
 
@@ -51,3 +52,4 @@ if(httpsPort) {
         console.log('HTTPS Server running on port ' + httpsPort);
     });
 }
+
