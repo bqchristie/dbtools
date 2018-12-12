@@ -1,5 +1,4 @@
 {
-  "apiPort": 3030,
   "apiPath": "api",
   "apiVersion" : "v1",
   "db": {
@@ -7,5 +6,9 @@
     "user": "app",
     "password": "password",
     "database": "test"
+  },
+  "ssl": {
+    "path": "/etc/letsencrypt/live/api.fuudlist.com/",
+    "files": ["cert.pem",  "chain.pem",  "fullchain.pem", "privkey.pem"]
   }
 }
