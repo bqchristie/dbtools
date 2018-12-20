@@ -20,6 +20,10 @@ function createTableDDL(dao) {
     return ddl;
 }
 
+function deleteById(dao, id) {
+    return `delete from ${getDAOTableName(dao)} where id = ${id}`
+}
+
 function getColumnDDL(meta) {
     let defs = ['id int auto_increment primary key'];
 
@@ -182,6 +186,7 @@ function getValue(val) {
 
 module.exports = {
     createTableDDL,
+    deleteById,
     findAll,
     find,
     findById,

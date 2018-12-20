@@ -13,7 +13,7 @@ router.post('/login', function (req, res) {
         let token = jwt.sign({id: user._id}, config.secret, {
             expiresIn: 86400 // expires in 24 hours
         });
-        res.status(200).send({auth: true, token: token});
+        res.status(200).send({auth: true, user: user.id, token: token});
     }).catch(err => {
         return res.status(500).send('Error on the server.');
     });

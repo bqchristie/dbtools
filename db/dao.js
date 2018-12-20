@@ -29,6 +29,11 @@ class dao {
         return db.execute(queryHelper.getBulkInsertStatement(arr));
     }
 
+    static deleteById(id) {
+        let dao = this;
+        return db.execute(queryHelper.deleteById(dao, id))
+    }
+
     static findAll() {
         let that = this;
         return new Promise(function (resolve, reject) {
