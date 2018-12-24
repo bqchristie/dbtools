@@ -42,8 +42,13 @@ router.post('/:model', function(req, res){
     });
 });
 
-router.delete('/:model', function(req, res){
+router.delete('/:model/:id', function(req, res){
     res.json({msg: 'not implemented yet'});
+    models.getModel(req.params.model).deleteById(req.params.id).then(result=>{
+        res.json(result);
+    }).catch(err=>{
+        res.json(err);
+    });
 })
 
 
