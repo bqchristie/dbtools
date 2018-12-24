@@ -22,8 +22,8 @@ test('getBulkInsertStatement', ()=> {
 })
 
 
-test('findBy', () => {
-    let sql = qh.find(User, {username: 'bob', password:'ganoosh'});
+test('find', () => {
+    let sql = qh.find(User, {email: 'bob@test.com', password:'ganoosh'});
     console.log(sql);
     expect(true).toBe(true);
 })
