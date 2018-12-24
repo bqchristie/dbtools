@@ -1,5 +1,6 @@
 let qh = require('../query.helper.js')
 let User  = require('../../model/user');
+let Product  = require('../../model/product');
 let Role  = require('../../model/role');
 let RolePermission  = require('../../model/role.permission');
 let List  = require('../../model/list');
@@ -7,9 +8,9 @@ let ListItem  = require('../../model/list.item');
 let sqlFormat = require('sql-formatter');
 
 test('createTableDDL',()=> {
-    let ddl = sqlFormat.format(qh.createTableDDL(User));
+    let ddl = sqlFormat.format(qh.createTableDDL(Product));
     console.log(ddl);
-    expect(true).toBe(true);
+    expect(true).toBe(false);
 });
 
 

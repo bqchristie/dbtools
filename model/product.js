@@ -10,7 +10,7 @@ var productCategory = require('./product.category');
 
 Product.meta = {
     columns: [
-        {name: 'name'}
+        {name: 'name', mandatory: true, unique: true}
     ],
     hasOne: [productCategory]
 }

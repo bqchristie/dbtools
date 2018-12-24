@@ -17,7 +17,22 @@ function createTableDDL(dao) {
     let ddl =
         `drop table if exists ${tableName};
          create table if not exists ${tableName}(${getColumnDDL(dao.meta)});`;
+    ddl = ddl + getUniqueConstraints(tableName, dao.meta);
     return ddl;
+}
+
+function getUniqueConstraints(tableName, meta) {
+    let constraints = [];
+    let uniqueColumns = meta.columns.filter(column => {
+        return column.unique
+    })
+
+    uniqueColumns.forEach( column => {
+        constraints.push(`CREATE UNIQUE INDEX ${tableName}_${column.name}_uindex ON ${tableName} (${column.name});`)
+    })
+
+
+    return constraints.join('');
 }
 
 function deleteById(dao, id) {
@@ -55,8 +70,8 @@ function getFKConstraints(dao) {
     let foreignKeys = dao.meta.hasOne;
     let foreignKeysDLL = [];
 
-    foreignKeys.forEach(key=>{
-        if(key) {
+    foreignKeys.forEach(key => {
+        if (key) {
             let foreignTableName = _.snakeCase(key.name);
 
             let ddl = `ALTER TABLE ${tableName}
@@ -70,7 +85,6 @@ function getFKConstraints(dao) {
 }
 
 
-
 function getInsertStatement(dao) {
     let tableName = getDAOTableName(dao);
     let columns = getInstanceColumns(dao).join(",");
@@ -79,13 +93,13 @@ function getInsertStatement(dao) {
     return insert;
 }
 
-function getBulkInsertStatement(daoArray){
+function getBulkInsertStatement(daoArray) {
     let dao = daoArray[0];
     let tableName = getDAOTableName(dao);
     console.log(`Doing bulk insert for ${tableName}....`);
     let columns = getInstanceColumns(dao).join(",");
     let values = []
-    daoArray.forEach(dao=>{
+    daoArray.forEach(dao => {
         values.push('(' + getInstanceValues(dao).join(',') + ')')
     })
     let insert = `INSERT INTO ${tableName}(${columns})\n VALUES\n ${values.join(',\n')};`;
@@ -109,7 +123,7 @@ function findAll(dao) {
 
 function find(dao, obj) {
     let conditions = []
-    _.keys(obj).forEach(function(key){
+    _.keys(obj).forEach(function (key) {
         conditions.push(`${key} = '${obj[key]}'`)
     });
     return `select * from ${getDAOTableName(dao)}  where ${conditions.join(' and ')}`;
@@ -129,8 +143,8 @@ function getForeignKeys(dao) {
 
 function findRelatedObjects(ownerObj, relatedObj, isJoin) {
 
-    if(isJoin) {
-        var joinedObj = _.find(relatedObj.meta.hasOne,function(fn){
+    if (isJoin) {
+        var joinedObj = _.find(relatedObj.meta.hasOne, function (fn) {
             return getDAOTableName(fn) != getDAOTableName(ownerObj);
         });
 
@@ -159,7 +173,7 @@ function getInstanceValues(dao) {
     var columns = getInstanceColumns(dao);
     var obj = dao;
     return columns.reduce(function (accum, column) {
-        let val = obj[_.replace(column,/_id$/gm,'')];
+        let val = obj[_.replace(column, /_id$/gm, '')];
         if (!_.isObject(val)) {
             val = _.isString(val) ? '\'' + escSQL(val) + '\'' : val;
             accum.push(val);
@@ -171,12 +185,13 @@ function getInstanceValues(dao) {
     }, [])
 }
 
-function  escSQL(str) {
-    return _.replace(str, /'/gm,'\\\'')
+function escSQL(str) {
+    return _.replace(str, /'/gm, '\\\'')
 }
 
 function defineColumn(column) {
-    return column.name + ' varchar(100) null';
+    let mandatory = column.mandatory ? 'not null' : 'null';
+    return column.name + ` varchar(100) ${mandatory}`;
 }
 
 function getValue(val) {
