@@ -39,8 +39,13 @@ test('findRelatedObjects', () => {
 
 test('findRelatedObjectWithJoin', () => {
     let role= new Role({id:1});
-
     let sql = qh.findRelatedObjects(role, RolePermission, true);
     console.log(sql);
     expect(true).toBe(true);
+})
+
+
+test('mapDataType', ()=> {
+    let type = qh.mapDataType()
+    expect(type).toBe('varchar(100)');
 })

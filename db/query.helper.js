@@ -193,7 +193,13 @@ function escSQL(str) {
 
 function defineColumn(column) {
     let mandatory = column.mandatory ? 'not null' : 'null';
-    return column.name + ` varchar(100) ${mandatory}`;
+    return column.name + ` ${mapDataType(column.type)} ${mandatory}`;
+}
+
+function mapDataType(type){
+    //If type is not defined return varchar 100
+    if (!type) return 'varchar(100)';
+    return 'varchar(100)';
 }
 
 function getValue(val) {
@@ -212,7 +218,9 @@ module.exports = {
     getFKConstraints,
     getInsertStatement,
     getUpdateStatement,
-
+    mapDataType
 }
+
+
 
 
