@@ -25,6 +25,7 @@ function generateFakeUsers() {
             _.times(10, function () {
                 users.push(User.fake(roles));
             });
+            users[0].email = 'admin@admin.com';
             resolve(users);
         }).catch(err=> console.log(err));
     })
