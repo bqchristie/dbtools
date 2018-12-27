@@ -18,7 +18,7 @@ class dao {
         return db.execute(queryHelper.createTableDDL(this));
     }
 
-    static buildConstraints() {
+    static buildFKConstraints() {
         if (this.meta.hasOne) {
             return db.execute(queryHelper.getFKConstraints(this));
         }

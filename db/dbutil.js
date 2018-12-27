@@ -26,28 +26,30 @@ class DBUtil {
     }
 
     static generateTables(objs) {
-        var promises = [];
-        objs.forEach(obj => {
-            promises.push(obj.createTable());
+        return new Promise(function(resolve, reject){
+            let promises = [];
+            objs.forEach(obj => {
+                promises.push(obj.createTable());
+            })
+            Promise.all(promises).then(results =>{
+                DBUtil.buildFKConstraints(objs).then(results=>{
+                   resolve('done generating tables..')
+               })
+            });
         })
-        Promise.all(promises).then(results =>{
-           this.buildConstraints(objs)
-        });
-
     }
 
-    static buildConstraints(objs){
-        var promises = [];
-        objs.forEach(obj => {
-            //promises.push(obj.createTable());
-            promises.push(obj.buildConstraints());
-            //console.log(obj);
-        });
+    static buildFKConstraints(objs){
+        return new Promise( (resolve,reject) => {
+            let promises = [];
+            objs.forEach(obj => {
+                promises.push(obj.buildFKConstraints());
+            });
 
-        Promise.all(promises).then(results =>{
-            process.exit();
-        });
-
+            Promise.all(promises).then(results =>{
+                resolve('done building constraints');
+            });
+        })
     }
 
     static execute(statements) {

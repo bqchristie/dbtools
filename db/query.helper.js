@@ -22,6 +22,8 @@ function createTableDDL(dao) {
 }
 
 function getUniqueConstraints(tableName, meta) {
+    if(!meta.columns) return '';
+
     let constraints = [];
     let uniqueColumns = meta.columns.filter(column => {
         return column.unique
