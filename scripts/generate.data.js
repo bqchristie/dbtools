@@ -35,7 +35,6 @@ function generateFakeUsers() {
 Promise.resolve()
     .then(() => doBulkInsert(Permission, require('./data/permissions')))
     .then(() => doBulkInsert(Role, require('./data/roles')))
-    .then(() => doBulkInsert(Permission, require('./data/permissions')))
     .then(() => doBulkInsert(Product, require('./data/products')))
     .then(() => doBulkInsert(ProductCategory, require('./data/product.categories')))
     .then(() => generateFakeUsers())
