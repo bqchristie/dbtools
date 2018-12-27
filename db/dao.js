@@ -5,7 +5,13 @@ let queryHelper = require('./query.helper');
 
 class dao {
 
-
+    static dataTypes() {
+        return {
+            LONG_TEXT: 'VARCHAR(100)',
+            DATE_TIME: 'DATETIME',
+            BOOLEAN: 'BOOLEAN'
+        }
+    }
     /**
      *
      * @param json

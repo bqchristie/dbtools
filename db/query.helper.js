@@ -202,7 +202,7 @@ function defineColumn(column) {
 function mapDataType(type){
     //If type is not defined return varchar 100
     if (!type) return 'varchar(100)';
-    return 'varchar(100)';
+    return type;
 }
 
 function getValue(val) {
