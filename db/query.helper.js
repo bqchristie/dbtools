@@ -60,7 +60,6 @@ function getColumnDDL(meta) {
     }, defs);
 
     //add audit columns
-
     defs.push('created_date_time datetime not null default now()');
     defs.push('updated_date_time datetime');
 
