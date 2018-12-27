@@ -7,6 +7,6 @@ module.exports = ProductCategory;
 
 ProductCategory.meta = {
     columns: [
-        {name: 'name'}
+        {name: 'name', unique: true}
     ]
 }

@@ -19,5 +19,6 @@ List.meta = {
     hasOne: [user],
     hasMany: {
         listItems: listItem
-    }
+    },
+    uniqueBy: ['name','user_id']
 }

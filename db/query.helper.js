@@ -33,6 +33,10 @@ function getUniqueConstraints(tableName, meta) {
         constraints.push(`CREATE UNIQUE INDEX ${tableName}_${column.name}_uindex ON ${tableName} (${column.name});`)
     })
 
+    let uniqueBy = meta.uniqueBy;
+    if(uniqueBy) {
+        constraints.push(`CREATE UNIQUE INDEX ${tableName}_${uniqueBy.join('_')}_uindex ON ${tableName} (${uniqueBy.join(',')});`)
+    }
 
     return constraints.join('');
 }

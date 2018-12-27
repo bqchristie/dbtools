@@ -7,7 +7,7 @@ module.exports = Permission;
 
 Permission.meta = {
     columns: [
-        {name: 'name'}
+        {name: 'name', unique: true}
     ]
 }
 

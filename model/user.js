@@ -15,7 +15,7 @@ var list = require('./list');
 
 User.meta = {
     columns: [
-        {name: 'email'},
+        {name: 'email', unique: true},
         {name: 'password'},
         {name: 'firstName'},
         {name: 'lastName'},

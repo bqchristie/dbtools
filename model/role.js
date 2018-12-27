@@ -8,7 +8,7 @@ let rolePermission = require('./role.permission');
 
 Role.meta = {
     columns: [
-        {name: 'name'}
+        {name: 'name', unique: true}
     ],
     hasMany: {
         permissions: rolePermission
