@@ -9,7 +9,7 @@ const jwt = require('jsonwebtoken');
 var bodyParser = require('body-parser');
 var config = require('./config/config');
 let openRoutes = require('./routes/auth')
-let secureRoutes = require('./routes/index');
+let apiRoutes = require('./routes/api');
 let verifyToken = require('./routes/verify.token');
 
 
@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'))
 app.use('/auth', openRoutes);
-app.use('/api', verifyToken, secureRoutes);
+app.use('/api', verifyToken, apiRoutes);
 
 var httpPort = process.env.HTTP_PORT;        // set our port
 var httpsPort = process.env.HTTPS_PORT;        // set our port
