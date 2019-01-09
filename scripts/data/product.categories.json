@@ -1,4 +1,5 @@
 [
+  { "name":"misc"},
   { "name":"fruit"},
   { "name":"vegetables"},
   { "name":"dairy"},
