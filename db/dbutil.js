@@ -11,8 +11,8 @@ const connection = mysql.createConnection(config.db);
 class DBUtil {
 
     static encrypt(plainText){
-        var salt = bcrypt.genSaltSync(9);
-        var hash = bcrypt.hashSync(plainText, salt);
+        let salt = bcrypt.genSaltSync(9);
+        let hash = bcrypt.hashSync(plainText, salt);
         return hash;
     }
 

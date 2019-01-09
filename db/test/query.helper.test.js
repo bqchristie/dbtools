@@ -7,6 +7,14 @@ let List  = require('../../model/list');
 let ListItem  = require('../../model/list.item');
 let sqlFormat = require('sql-formatter');
 
+// Make the tests run without throwing exceptions
+let iconv = require('iconv-lite');
+let encodings = require('iconv-lite/encodings');
+
+test('whats your problem', ()=> {
+    expect(true).toBe(true);
+});
+
 test('createTableDDL',()=> {
     let ddl = sqlFormat.format(qh.createTableDDL(Product));
     console.log(ddl);
@@ -16,7 +24,7 @@ test('createTableDDL',()=> {
 
 test('getBulkInsertStatement', ()=> {
     let roles = [new Role({id:1,name:'test'})]
-    let users = [User.fake(roles)];
+    let users = [User.fake(roles),User.fake(roles)];
     let sql = sqlFormat.format(qh.getBulkInsertStatement(users));
     console.log(sql);
     expect(true).toBe(true);
