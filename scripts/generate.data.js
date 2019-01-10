@@ -47,6 +47,23 @@ function initUserLists() {
     })
 }
 
+function assignDefaultProductCategories() {
+    return new Promise( (resolve, reject) => {
+        ProductCategory.findById(1).then(category => {
+            let promises = []
+            Product.findAll().then((products) => {
+                products.forEach( product => {
+                    product = new Product({id: product.id, productCategory: category});
+                    promises.push(product.save())
+                })
+                Promise.all(promises).then(()=>{
+                    resolve('Product categories assigned...')
+                })
+            })
+        });
+    })
+}
+
 
 Promise.resolve()
     .then(() => doBulkInsert(Permission, require('./data/permissions')))
@@ -56,6 +73,7 @@ Promise.resolve()
     .then(() => generateFakeUsers())
     .then((users) => { console.log('have users'); doBulkInsert(User, users) })
     .then(() => initUserLists())
+    .then(() => assignDefaultProductCategories())
     .catch(err => console.log(err))
     .then(() => {
         console.log('done');
