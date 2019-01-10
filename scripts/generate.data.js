@@ -5,6 +5,7 @@ let Role = require('../model/role');
 let Permission = require('../model/permission');
 let Product = require('../model/product');
 let ProductCategory = require('../model/product.category');
+let List = require('../model/list')
 
 
 function doBulkInsert(dao, json, resolve, reject) {
@@ -31,6 +32,21 @@ function generateFakeUsers() {
     })
 }
 
+function initUserLists() {
+    return new Promise( (resolve, reject) => {
+        User.findAll().then(users => {
+            let promises = [];
+            users.forEach(user => {
+                let list = new List({name:'Master List', user: user});
+                promises.push(list.save())
+            });
+            Promise.all(promises).then(()=>{
+                resolve('Lists created...')
+            })
+        });
+    })
+}
+
 
 Promise.resolve()
     .then(() => doBulkInsert(Permission, require('./data/permissions')))
@@ -39,6 +55,7 @@ Promise.resolve()
     .then(() => doBulkInsert(ProductCategory, require('./data/product.categories')))
     .then(() => generateFakeUsers())
     .then((users) => { console.log('have users'); doBulkInsert(User, users) })
+    .then(() => initUserLists())
     .catch(err => console.log(err))
     .then(() => {
         console.log('done');
