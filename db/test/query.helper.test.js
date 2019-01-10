@@ -11,9 +11,6 @@ let sqlFormat = require('sql-formatter');
 let iconv = require('iconv-lite');
 let encodings = require('iconv-lite/encodings');
 
-test('whats your problem', ()=> {
-    expect(true).toBe(true);
-});
 
 test('createTableDDL',()=> {
     let ddl = sqlFormat.format(qh.createTableDDL(Product));
@@ -56,4 +53,22 @@ test('findRelatedObjectWithJoin', () => {
 test('mapDataType', ()=> {
     let type = qh.mapDataType()
     expect(type).toBe('varchar(100)');
+})
+
+test('update dao', () => {
+    let dao = new Product( {id:1, name:'ganoosh', productCategory: {id: 2}} )
+    let sql = sqlFormat.format(qh.getUpdateStatement(dao));
+    console.log(sql);
+
+    expect(true).toBe(true);
+})
+
+
+test('get instance values', () => {
+    let dao = new Product( {id:1, name:'ganoosh', productCategory: {id: 2}} )
+    let values = qh.getInstanceValues(dao);
+    console.log(values);
+    expect(values[0]).toBe(1);
+    expect(values[1]).toBe('\'ganoosh\'');
+    expect(values[2]).toBe(2);
 })

@@ -101,7 +101,6 @@ function getInsertStatement(dao) {
 function getBulkInsertStatement(daoArray) {
     let dao = daoArray[0];
     let tableName = getDAOTableName(dao);
-    console.log(`Doing bulk insert for ${tableName}....`);
     let columns = getInstanceColumns(dao).join(",");
     let values = []
     daoArray.forEach(dao => {
@@ -112,12 +111,16 @@ function getBulkInsertStatement(daoArray) {
 }
 
 function getUpdateStatement(dao) {
-    var columns = _.keys(dao);
-    columns = columns.map(column => {
-        return column + '=' + getValue(dao[column]);
-    });
+    let tableName = getDAOTableName(dao);
+    let columns = getInstanceColumns(dao).map( column => _.snakeCase(column));
+    let values = getInstanceValues(dao);
+    let setters = [];
 
-    let update = `UPDATE ${dao.constructor.getTableName()} SET ${columns.join(', ')} WHERE id = ${dao.id}`
+    columns.forEach( (column, idx) => {
+        setters.push(`${column} = ${values[idx]}`)
+    })
+
+    let update = `UPDATE ${tableName} SET ${setters.join(',')} WHERE id = ${dao.id}`
 
     return update;
 }
@@ -221,6 +224,7 @@ module.exports = {
     getFKConstraints,
     getInsertStatement,
     getUpdateStatement,
+    getInstanceValues,
     mapDataType
 }
 
