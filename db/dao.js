@@ -100,7 +100,7 @@ class dao {
                 Promise.all(promises).then(results => {
                     fKeys.forEach((key, idx) => {
                         var fn = _.find(hasOne, function (clazz) {
-                            return clazz.name.toLowerCase() === _.trimEnd(key, '_id');
+                            return _.snakeCase(clazz.name) === _.trimEnd(key, '_id');
                         });
                         obj[_.trimEnd(key, '_id')] = new fn(results[idx]);
                     });
