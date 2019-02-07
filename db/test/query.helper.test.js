@@ -19,6 +19,16 @@ test('createTableDDL',()=> {
 });
 
 
+test('insert', ()=> {
+    let product = new Product();
+    product.id = 1;
+    product.productCategory = {id:1}
+    let ddl = sqlFormat.format(qh.getInsertStatement(product));
+    console.log(ddl);
+    expect(true).toBe(false);
+})
+
+
 test('getBulkInsertStatement', ()=> {
     let roles = [new Role({id:1,name:'test'})]
     let users = [User.fake(roles),User.fake(roles)];

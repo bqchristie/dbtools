@@ -146,7 +146,7 @@ function getForeignKeys(dao) {
     keys = keys.filter(key => {
         return _.isObject(dao[key])
     });
-    return keys.map(key => key + '_id');
+    return keys.map(key => _.snakeCase(key) + '_id');
 }
 
 function findRelatedObjects(ownerObj, relatedObj, isJoin) {
@@ -181,7 +181,7 @@ function getInstanceValues(dao) {
     var columns = getInstanceColumns(dao);
     var obj = dao;
     return columns.reduce(function (accum, column) {
-        let val = obj[_.replace(column, /_id$/gm, '')];
+        let val = obj[_.camelCase(_.replace(column, /_id$/gm, ''))];
         if (!_.isObject(val)) {
             val = _.isString(val) ? '\'' + escSQL(val) + '\'' : val;
             accum.push(val);
